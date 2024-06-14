@@ -69,3 +69,7 @@ end
 # Clues
 gem 'smarter_csv'
 gem 'will_paginate', '~> 4.0'
+
+gem 'htmlbeautifier'
+gem 'rubocop', require: false
+gem 'rubocop-rails', require: false

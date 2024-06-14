@@ -10,26 +10,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_14_204055) do
-  create_table "clues", force: :cascade do |t|
-    t.integer "round"
-    t.integer "clue_value"
-    t.integer "daily_double_value"
-    t.text "category"
-    t.text "comments"
-    t.text "answer"
-    t.text "question"
-    t.text "air_date"
-    t.text "notes"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+ActiveRecord::Schema[7.1].define(version: 20_240_614_221_636) do
+  create_table 'clues', force: :cascade do |t|
+    t.integer 'round'
+    t.integer 'clue_value'
+    t.integer 'daily_double_value'
+    t.text 'category'
+    t.text 'comments'
+    t.text 'answer'
+    t.text 'question'
+    t.text 'air_date'
+    t.text 'notes'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
   end
 
-  create_table "users", force: :cascade do |t|
-    t.string "name"
-    t.string "password_digest"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table 'sessions', force: :cascade do |t|
+    t.integer 'correct'
+    t.integer 'incorrect'
+    t.integer 'pass'
+    t.integer 'winnings'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
   end
 
+  create_table 'users', force: :cascade do |t|
+    t.string 'name'
+    t.string 'password_digest'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+  end
 end
