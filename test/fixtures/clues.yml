@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  round: 1
+  clue_value: 1
+  daily_double_value: 1
+  category: MyText
+  comments: MyText
+  answer: MyText
+  question: MyText
+  air_date: MyText
+  notes: MyText
+
+two:
+  round: 1
+  clue_value: 1
+  daily_double_value: 1
+  category: MyText
+  comments: MyText
+  answer: MyText
+  question: MyText
+  air_date: MyText
+  notes: MyText
