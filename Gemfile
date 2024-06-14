@@ -68,4 +68,4 @@ end
 
 # Clues
 gem 'smarter_csv'
-gem 'will_paginate', '~> 3.1.0'
+gem 'will_paginate', '~> 4.0'
