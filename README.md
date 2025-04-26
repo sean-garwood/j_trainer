@@ -1,19 +1,29 @@
-# J-Trainer
+# J! Trainer
 
-A jeopardy training app.
+Hone your Jeopardy! skills using real clues from the game. Inspired by
+[Protobowl](https://protobowl.com/jeopardy/lobby).
 
-## features
+## Features
 
-Display all jeopardy clues
+This app is under construction. It doesn't really have any features.
 
-### todo
+## Roadmap
 
-* Fix pagination of clues
-  * hotfix: clues?page=n
-* use an API instead of static file to fetch clues
-  * [rithmschool jeopardy](https://github.com/rithmschool/jeopardy-api)
-* Implement [turbo frames](~/Documents/notes/ruby/rails/turbo.md) to update clues without refreshing the page
-  * probably want to have a static page for session that has at least three frames:
-    * clues
-    * responses
-    * session stats
+1. Get some clues!
+   - No decent APIs seem to exist. I found a pretty nice static .tsv but need to
+     filter/format.
+1. Serve random clues, accept user input
+   - Judge as correct/incorrect/pass
+   - Persist results to database
+1. Filter clues by
+   - Category
+   - Dollar amount
+   - Round
+1. Stats view
+   - Table view by category/right/wrong/pass
+   - Overall lifetime score
+   - Score by category
+   - Heat map
+      - Identify maximal opportunity where:
+         - Frequency of category is high
+         - Efficiency (dollars gained/dollars possible) is low
