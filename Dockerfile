@@ -2,8 +2,8 @@
 # check=error=true
 
 # This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
-# docker build -t temp_j_trainer .
-# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name temp_j_trainer temp_j_trainer
+# docker build -t j_trainer .
+# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name j_trainer j_trainer
 
 # For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
 
