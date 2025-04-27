@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_26_182306) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_27_025821) do
   create_table "clues", force: :cascade do |t|
     t.integer "round"
     t.integer "clue_value"
     t.integer "daily_double_value"
-    t.text "category" # TODO: make this a foreign key
+    t.text "category"
     t.text "comments"
     t.text "answer"
     t.text "question"
@@ -23,6 +23,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_26_182306) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "drills", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "correct_count"
+    t.integer "incorrect_count"
+    t.integer "pass_count"
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_drills_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -42,5 +54,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_26_182306) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "drills", "users"
   add_foreign_key "sessions", "users"
 end
