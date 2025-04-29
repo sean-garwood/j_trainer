@@ -9,6 +9,8 @@ class Clue < ApplicationRecord
   validates :round,
     presence: true,
     inclusion: { in: 1..3 }
+  validates :category, :question, :answer, :air_date, presence: true
+
   before_validation :normalize_clue_value
 
   private
@@ -20,6 +22,9 @@ class Clue < ApplicationRecord
     end
 
     def normalize_clue_value
-      air_date < "2001-11-26" ? self.clue_value *= 2 : clue_value
+      if air_date.present? && air_date < "2001-11-26" && clue_value.present?
+        self.clue_value *= 2
+      end
+      clue_value
     end
 end

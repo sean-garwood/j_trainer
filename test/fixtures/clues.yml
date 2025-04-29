@@ -14,7 +14,7 @@ two:
   category: CATEGORY
   answer: MyText
   question: MyText
-  air_date: MyText
+  air_date: 2025-04-29
 
 old:
   round: 1
@@ -23,3 +23,19 @@ old:
   answer: MyText
   question: MyText
   air_date: 1984-12-29
+
+invalid_round:
+  round: 4
+  clue_value: 100
+  category: CATEGORY
+  answer: MyText
+  question: MyText
+  air_date: 1984-12-29
+
+invalid_clue_value:
+  round: 2
+  clue_value: 4000
+  category: CATEGORY
+  answer: MyText
+  question: MyText
+  air_date: 2025-04-29
