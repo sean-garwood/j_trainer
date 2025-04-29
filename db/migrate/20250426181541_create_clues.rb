@@ -8,7 +8,7 @@ class CreateClues < ActiveRecord::Migration[8.0]
       t.text :comments, optional: true
       t.text :answer
       t.text :question
-      t.text :air_date
+      t.string :air_date
       t.text :notes, optional: true
 
       t.timestamps

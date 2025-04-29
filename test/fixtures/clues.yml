@@ -2,22 +2,24 @@
 
 one:
   round: 1
-  clue_value: 1
-  daily_double_value: 1
-  category: MyText
-  comments: MyText
+  clue_value: 200
+  category: CATEGORY
   answer: MyText
   question: MyText
-  air_date: MyText
-  notes: MyText
+  air_date: 2025-04-29
 
 two:
-  round: 1
-  clue_value: 1
-  daily_double_value: 1
-  category: MyText
-  comments: MyText
+  round: 2
+  clue_value: 400
+  category: CATEGORY
   answer: MyText
   question: MyText
   air_date: MyText
-  notes: MyText
+
+old:
+  round: 1
+  clue_value: 100
+  category: CATEGORY
+  answer: MyText
+  question: MyText
+  air_date: 1984-12-29
