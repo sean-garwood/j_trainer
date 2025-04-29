@@ -12,7 +12,7 @@ class RegistrationsController < ApplicationController
       start_new_session_for @user
       redirect_to root_path, notice: "Welcome! You have signed up successfully."
     else
-      render :new
+      render :new, status: :unprocessable_entity, flash: { error: @user.errors.full_messages.join(", ") }
     end
   end
 
