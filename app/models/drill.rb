@@ -5,9 +5,9 @@ class Drill < ApplicationRecord
 
   before_save :clues_seen_count
 
-  def clues_seen_count
-    @clues_seen_count ||= 0
-    self.correct_count + self.incorrect_count + self.pass_count
+  def set_clues_seen_count
+    @clues_seen_count ||=
+      self.correct_count + self.incorrect_count + self.pass_count
   end
 
   def increment_correct_count

@@ -29,6 +29,10 @@ sample_clues = [
   }
 ]
 
+sample_user = User.new(email_address: "foo@bar.com", password: "password")
+
 Clue.insert_all(sample_clues) if Clue.count.zero?
 puts "Added #{sample_clues.size} sample clues for #{Rails.env}"
+sample_user.save! if User.count.zero?
+puts "Added sample user for #{Rails.env}"
 puts "Seeding completed."

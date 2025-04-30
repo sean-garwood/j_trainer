@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   resource :session
   resource :registration, only: %i[new create]
+  resources :drills, except: %i[edit destroy]
   get "sign_up", to: "registrations#new"
   post "sign_up", to: "registrations#create"
   resources :passwords, param: :token
