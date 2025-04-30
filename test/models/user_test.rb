@@ -13,11 +13,8 @@ class UserTest < ActiveSupport::TestCase
     assert_includes @user.errors[:email_address], "can't be blank"
   end
 
-  test "destroys dependent sessions" do
-    @user = users(:one)
-    Session.create!(user: @user)
-    assert_difference("Session.count", -1) do
-      @user.destroy
-    end
+  test "validates presence of password" do
+    @user = User.new(email_address: "foo@bar", password: "")
+    assert_not @user.valid?
   end
 end

@@ -2,6 +2,9 @@ class Clue < ApplicationRecord
   MIN_NORMALIZED_CLUE_VALUE = 200
   MAX_NORMALIZED_CLUE_VALUE = 2000
 
+  has_many :drill_clues
+  has_many :drills, through: :drill_clues
+
   validates :clue_value,
     presence: true,
     inclusion: { in:
@@ -12,6 +15,17 @@ class Clue < ApplicationRecord
   validates :category, :question, :answer, :air_date, presence: true
 
   before_validation :normalize_clue_value
+
+  def success_rate
+    total= drill_clues.count
+    return nil if total.zero?
+
+    drill_clues.correct.count.to_f / total
+  end
+
+  def times_seen
+    drills.count
+  end
 
   private
 
