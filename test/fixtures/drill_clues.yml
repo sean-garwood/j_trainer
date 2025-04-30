@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  drill: one
+  clue: one
+  result: 1
+  response_time: 1.5
+  response: MyString
+
+two:
+  drill: two
+  clue: two
+  result: 1
+  response_time: 1.5
+  response: MyString

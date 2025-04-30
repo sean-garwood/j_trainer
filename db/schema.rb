@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_27_025821) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_30_011317) do
   create_table "clues", force: :cascade do |t|
     t.integer "round"
     t.integer "clue_value"
@@ -23,6 +23,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_27_025821) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "drill_clues", force: :cascade do |t|
+    t.integer "drill_id", null: false
+    t.integer "clue_id", null: false
+    t.integer "result"
+    t.float "response_time"
+    t.string "response"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["clue_id"], name: "index_drill_clues_on_clue_id"
+    t.index ["drill_id"], name: "index_drill_clues_on_drill_id"
   end
 
   create_table "drills", force: :cascade do |t|
@@ -54,6 +66,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_27_025821) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "drill_clues", "clues"
+  add_foreign_key "drill_clues", "drills"
   add_foreign_key "drills", "users"
   add_foreign_key "sessions", "users"
 end
