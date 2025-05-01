@@ -3,10 +3,10 @@ class Drill < ApplicationRecord
   has_many :drill_clues, dependent: :destroy
   has_many :clues, through: :drill_clues
 
-  before_save :clues_seen_count
+  before_save :set_clues_seen_count
 
   def set_clues_seen_count
-    @clues_seen_count ||=
+    self.clues_seen_count ||=
       self.correct_count + self.incorrect_count + self.pass_count
   end
 

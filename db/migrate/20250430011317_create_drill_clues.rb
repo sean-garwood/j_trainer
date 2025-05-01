@@ -9,7 +9,5 @@ class CreateDrillClues < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-
-    add_index :drill_clues, [ :drill_id, :clue_id ], unique: true
   end
 end

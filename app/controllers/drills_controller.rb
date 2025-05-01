@@ -1,5 +1,6 @@
 class DrillsController < ApplicationController
   def index
+    @drills = Current.user.drills
   end
 
   def new

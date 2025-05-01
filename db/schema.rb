@@ -39,9 +39,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_30_011317) do
 
   create_table "drills", force: :cascade do |t|
     t.integer "user_id", null: false
-    t.integer "correct_count"
-    t.integer "incorrect_count"
-    t.integer "pass_count"
+    t.integer "correct_count", default: 0
+    t.integer "incorrect_count", default: 0
+    t.integer "pass_count", default: 0
+    t.integer "clues_seen_count", default: 0
     t.datetime "started_at"
     t.datetime "ended_at"
     t.datetime "created_at", null: false
