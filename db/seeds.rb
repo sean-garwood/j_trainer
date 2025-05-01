@@ -29,10 +29,27 @@ sample_clues = [
   }
 ]
 
-sample_user = User.new(email_address: "foo@bar.com", password: "password")
+user = User.find_or_create_by!(email_address: "foo@bar.com") do |u|
+  u.password = "password"
+end
+puts "Added/found sample user for #{Rails.env}"
 
 Clue.insert_all(sample_clues) if Clue.count.zero?
 puts "Added #{sample_clues.size} sample clues for #{Rails.env}"
-sample_user.save! if User.count.zero?
-puts "Added sample user for #{Rails.env}"
+
+drill = Drill.find_or_create_by!(user: user) do |d|
+  d.started_at = Time.now
+  d.ended_at = Time.now + 5.minutes
+  d.correct_count = 0
+  d.incorrect_count = 0
+  d.pass_count = 0
+end
+puts "Added sample drill for #{Rails.env}"
+
+DrillClue.find_or_create_by!(drill: drill, clue: Clue.first) do |dc|
+  dc.response_time = 1.5
+  dc.response = "What is the Magna Carta?"
+end
+puts "Added sample drill clue for #{Rails.env}"
+
 puts "Seeding completed."
