@@ -69,4 +69,16 @@ class ClueTest < ActiveSupport::TestCase
   test "does not modify new clue values" do
     assert_equal 200, @clue_one.clue_value
   end
+
+  test "responds to #times_seen" do
+    assert_respond_to @clue_one, :times_seen
+  end
+
+  test "returns correct times seen" do
+    assert_equal 1, @clue_one.times_seen
+  end
+
+  test "responds to #success_rate" do
+    assert_respond_to @clue_one, :success_rate
+  end
 end

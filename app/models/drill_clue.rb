@@ -14,7 +14,6 @@ class DrillClue < ApplicationRecord
   enum :result, { incorrect: -1, pass: 0, correct: 1 }
 
   before_save :set_result
-  after_commit :update_drill_counts, on: [ :create, :update, :destroy ]
 
   private
     def set_result
@@ -39,9 +38,5 @@ class DrillClue < ApplicationRecord
 
     def passed?
       self.response =~ /\A(?:\s+|p(?:ass))\z/
-    end
-
-    def update_drill_counts
-      drill.update_counts!
     end
 end

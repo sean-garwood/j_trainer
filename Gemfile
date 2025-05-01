@@ -50,8 +50,8 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
-  gem 'guard'
-  gem 'guard-minitest'
+  gem "guard"
+  gem "guard-minitest"
 end
 
 group :development do

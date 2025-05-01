@@ -2,16 +2,10 @@
 
 one:
   user: one
-  correct_count: 1
-  incorrect_count: 1
-  pass_count: 1
-  started_at: 2025-04-26 22:58:21
+  started_at: 2025-04-26 22:58:22
   ended_at: 2025-04-26 22:58:21
 
 two:
   user: two
-  correct_count: 1
-  incorrect_count: 1
-  pass_count: 1
   started_at: 2025-04-26 22:58:21
   ended_at: 2025-04-26 22:58:21

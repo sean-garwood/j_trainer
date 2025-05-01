@@ -3,13 +3,22 @@
 one:
   drill: one
   clue: one
-  result: 1
   response_time: 1.5
   response: MyString
 
 two:
   drill: two
   clue: two
-  result: 1
   response_time: 1.5
-  response: MyString
+  response: MyText
+
+pass_on_timeout:
+  drill: two
+  clue: two
+  response_time: 100 # too long, timeout == pass
+
+pass_on_response:
+  drill: two
+  clue: two
+  response_time: 14.9
+  response: pass
