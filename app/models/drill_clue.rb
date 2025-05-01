@@ -14,28 +14,34 @@ class DrillClue < ApplicationRecord
   enum :result, { incorrect: -1, pass: 0, correct: 1 }
 
   before_save :set_result
+  after_commit :update_drill_counts, on: [ :create, :update, :destroy ]
 
-  def set_result
-    if buzzed_in?
-      self.result = response_matches_question? ? :correct : :incorrect
-    elsif no_buzz? || passed?
-      self.result = :pass
+  private
+    def set_result
+      if buzzed_in?
+        self.result = response_matches_question? ? :correct : :incorrect
+      elsif no_buzz? || passed?
+        self.result = :pass
+      end
     end
-  end
 
-  def response_matches_question?
-    self.response == clue.question # jeopardy-style
-  end
+    def response_matches_question?
+      self.response == clue.question # jeopardy-style
+    end
 
-  def buzzed_in?
-    true unless no_buzz?
-  end
+    def buzzed_in?
+      true unless no_buzz?
+    end
 
-  def no_buzz?
-    !response_time || response_time > MAX_BUZZ_IN_TIME
-  end
+    def no_buzz?
+      !response_time || response_time > MAX_BUZZ_IN_TIME
+    end
 
-  def passed?
-    self.response =~ /\A(?:\s+|p(?:ass))\z/
-  end
+    def passed?
+      self.response =~ /\A(?:\s+|p(?:ass))\z/
+    end
+
+    def update_drill_counts
+      drill.update_counts!
+    end
 end
