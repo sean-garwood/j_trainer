@@ -5,7 +5,13 @@ Rails.application.routes.draw do
   post "sign_up", to: "registrations#create"
   resources :passwords, param: :token
 
-  resources :drills, except: %i[edit destroy]
+  resources :drills, except: %i[edit destroy] do
+    collection do
+      get :train, to: "drills#train" # live training session.
+                                     # drills#show displays stats
+                                     # for completed drills
+    end
+  end
 
   root "drills#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

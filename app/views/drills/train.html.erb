@@ -1,0 +1,13 @@
+<div>
+  <h1>Train</h1>
+  <div>
+    <% if @clue.nil? %>
+      <p>Nothing to see here...</p>
+    <% else %>
+      <h2><%= @clue.category %></h2>
+      <h4><%= @clue.value %></h4>
+      <h5><%= @clue.round %></h5>
+      <p><%= @clue.answer %></p>
+    </div>
+  <% end %>
+</div>

@@ -5,6 +5,12 @@ class Drill < ApplicationRecord
 
   after_save :update_counts!
 
+  def accuracy
+    return "0%" if clues_seen_count.zero?
+
+    (correct_count.to_f / clues_seen_count * 100).round(2).to_s + "%"
+  end
+
   private
     def update_counts!
       total = drill_clues.count

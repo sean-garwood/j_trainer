@@ -1,0 +1,10 @@
+<% if defined?(resource) && resource.respond_to?(:errors) && resource.errors.any? %>
+  <div class="bg-red-50 text-red-500 p-3 rounded">
+    <h2 class="text-sm font-medium"><%= pluralize(resource.errors.count, "error") %> prohibited this <%= resource.class.name.downcase %> from being saved:</h2>
+    <ul class="list-disc pl-5 text-sm">
+      <% resource.errors.each do |error| %>
+        <li><%= error.full_message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
