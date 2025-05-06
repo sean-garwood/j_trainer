@@ -37,3 +37,4 @@
 !/app/assets/builds/.keep
 /db/data/
 /.vscode/
+*excalidraw

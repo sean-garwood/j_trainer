@@ -1,4 +1,5 @@
 class DrillClue < ApplicationRecord
+  # TODO: is this really responsibility of the model?
   MAX_RESPONSE_TIME = 15 # seconds
   MAX_BUZZ_IN_TIME  =  5
 
@@ -9,7 +10,8 @@ class DrillClue < ApplicationRecord
     inclusion: {
       in: 0..MAX_RESPONSE_TIME,
       message: "must be between 0 and #{MAX_RESPONSE_TIME} seconds"
-    }
+    },
+    except_on: :create
 
   enum :result, { incorrect: -1, pass: 0, correct: 1 }
 

@@ -8,8 +8,9 @@ Rails.application.routes.draw do
   resources :drills, except: %i[edit destroy] do
     collection do
       get :train, to: "drills#train" # live training session.
-                                     # drills#show displays stats
-                                     # for completed drills
+    end
+    member do
+      get :stats, to: "drills#show"
     end
   end
 

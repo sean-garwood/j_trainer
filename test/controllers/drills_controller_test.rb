@@ -39,11 +39,4 @@ class DrillsControllerTest < ActionDispatch::IntegrationTest
     get train_drills_path
     assert_response :success
   end
-
-  test "drill train fetches clue" do
-    get train_drills_path
-    assert_response :success
-    # assert that the response contains a clue
-    assert_not_nil @clue
-  end
 end

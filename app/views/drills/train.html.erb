@@ -1,13 +1,18 @@
 <div>
   <h1>Train</h1>
-  <div>
-    <% if @clue.nil? %>
-      <p>Nothing to see here...</p>
-    <% else %>
-      <h2><%= @clue.category %></h2>
-      <h4><%= @clue.value %></h4>
-      <h5><%= @clue.round %></h5>
-      <p><%= @clue.answer %></p>
+  <div id="drill-clues-container">
+    <div id="drill-clues-prompt">
+      <% if @clue.nil? %>
+        <p>Nothing to see here...</p>
+      <% else %>
+        <h2><%= @clue.category %></h2>
+        <h4>$<%= @clue.clue_value %></h4>
+        <h5><%= @clue.round === 2 ? "Double" : "" %> Jeopardy! Round</h5>
+        <p><%= @clue.answer %></p>
+      <% end %>
     </div>
-  <% end %>
+    <div id="user-response-form"> <%# form for user resonses.%>
+      <%# TODO: actually make the form. %>
+    </div>
+  </div>
 </div>

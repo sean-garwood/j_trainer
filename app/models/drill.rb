@@ -11,6 +11,15 @@ class Drill < ApplicationRecord
     (correct_count.to_f / clues_seen_count * 100).round(2).to_s + "%"
   end
 
+  def fetch_clue
+    pool = unseen_clue_ids
+    return nil if pool.empty?
+
+    clue = Clue.find(pool.sample)
+    logger.info "Fetched clue #{clue.id} from pool of #{pool.size} clues."
+    clue
+  end
+
   private
     def update_counts!
       total = drill_clues.count
@@ -33,5 +42,12 @@ class Drill < ApplicationRecord
         pass_count: passed,
         updated_at: Time.current
       )
+    end
+
+    def unseen_clue_ids
+      clues = Clue.where.not(id: drill_clues.select(:clue_id)).pluck(:id)
+      logger.info "Unseen clues: #{clues.join(", ")}"
+
+      clues
     end
 end

@@ -1,0 +1,12 @@
+defaults: &defaults
+  max_response_time: 15
+  max_buzz_time: 5
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults

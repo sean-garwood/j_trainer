@@ -15,7 +15,7 @@
     <tbody>
       <% @drills.each do |drill| %>
         <tr>
-          <td><%= drill.created_at.to_date %></td>
+          <td><%= drill.created_at %></td>
           <td><%= drill.correct_count %></td>
           <td><%= drill.incorrect_count %></td>
           <td><%= drill.pass_count %></td>
