@@ -34,6 +34,6 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     end
 
     # Assuming render :new on validation failure
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
   end
 end

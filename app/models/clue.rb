@@ -30,7 +30,7 @@ class Clue < ApplicationRecord
   private
 
     def validate_clue_value
-      normalized = normalized_clue_value
+      normalized = normalize_clue_value
       normalized >= MIN_NORMALIZED_CLUE_VALUE &&
         normalized <= MAX_NORMALIZED_CLUE_VALUE
     end

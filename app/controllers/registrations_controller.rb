@@ -12,12 +12,12 @@ class RegistrationsController < ApplicationController
       start_new_session_for @user
       redirect_to root_path, notice: "Welcome! You have signed up successfully."
     else
-      render :new, status: :unprocessable_entity, flash: { error: @user.errors.full_messages.join(", ") }
+      render :new, status: :unprocessable_content, flash: { error: @user.errors.full_messages.join(", ") }
     end
   end
 
   private
     def user_params
-      params.require(:user).permit(:email_address, :password, :password_confirmation)
+      params.expect(user: [ :email_address, :password, :password_confirmation ])
     end
 end

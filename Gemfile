@@ -71,3 +71,5 @@ gem "tailwindcss-rails", "~> 4.2"
 
 # Authenticate resources available to users
 gem "cancancan"
+
+gem "rubocop", "~> 1.81"

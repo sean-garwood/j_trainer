@@ -13,7 +13,7 @@ This app is under construction. It doesn't really have any features.
    - No decent APIs seem to exist. I found a pretty nice static .tsv but need to
      filter/format.
 1. Serve random clues, accept user input
-   - Judge as correct/incorrect/pass
+   - Leave it to user to judge as correct/incorrect/pass
    - Persist results to database
 1. Filter clues by
    - Category
