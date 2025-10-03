@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   resource :session, only: %i[new create destroy]
   resolve ("Session") { [ :session ] }
+  get "login", to: "sessions#new"
+  post "login", to: "sessions#create"
+  delete "logout", to: "sessions#destroy"
   get "sign_up", to: "registrations#new"
   post "sign_up", to: "registrations#create"
   resources :passwords, param: :token
@@ -8,9 +11,6 @@ Rails.application.routes.draw do
   resources :drills, except: %i[edit destroy] do
     collection do
       get :train, to: "drills#train" # live training session.
-    end
-    member do
-      get :stats, to: "drills#show"
     end
   end
 
