@@ -1,0 +1,7 @@
+<div class="flex">
+  <%# check if user logged in %>
+  <% if current_user? %>
+    <p>Hello, <%= current_user.email_address %></p>
+    <%= link_to "Logout", session_path, data: {"turbo-method": :delete} %>
+  <% end %>
+</div>
