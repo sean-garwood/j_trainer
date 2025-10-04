@@ -1,7 +1,7 @@
-<div className="flex flex-row p-4">
+<div class="flex flex-row gap-4 items-center">
   <%# check if user logged in %>
   <% if current_user? %>
-    <span>Hello, <%= current_user.email_address %></span>
-    <%= link_to "Logout", session_path, data: {"turbo-method": :delete} %>
+    <span class="text-gray-600">Hello, <%= current_user.email_address %></span>
+    <%= link_to "Logout", session_path, data: {"turbo-method": :delete}, class: "text-red-600 hover:text-red-800 font-medium transition-colors" %>
   <% end %>
 </div>

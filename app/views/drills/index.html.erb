@@ -1,28 +1,29 @@
-<div>
-  <h1 class="font-bold text-4xl">Your Drills</h1>
-  <table>
-    <caption class="text-center text-2xl">These are your drills.</caption>
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Correct</th>
-        <th>Incorrect</th>
-        <th>Pass</th>
-        <th>Total</th>
-        <th>Accuracy</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @drills.each do |drill| %>
+<div class="flex items-center justify-center h-screen" id="drill-index-container">
+  <div>
+    <table>
+      <caption class="text-center text-2xl">Your drills</caption>
+      <thead>
         <tr>
-          <td><%= drill.created_at %></td>
-          <td><%= drill.correct_count %></td>
-          <td><%= drill.incorrect_count %></td>
-          <td><%= drill.pass_count %></td>
-          <td><%= drill.clues_seen_count %></td>
-          <td><%= drill.accuracy %></td>
+          <th>Date</th>
+          <th>Correct</th>
+          <th>Incorrect</th>
+          <th>Pass</th>
+          <th>Total</th>
+          <th>Accuracy</th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <% @drills.each do |drill| %>
+          <tr>
+            <td><%= drill.created_at %></td>
+            <td><%= drill.correct_count %></td>
+            <td><%= drill.incorrect_count %></td>
+            <td><%= drill.pass_count %></td>
+            <td><%= drill.clues_seen_count %></td>
+            <td><%= drill.accuracy %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>

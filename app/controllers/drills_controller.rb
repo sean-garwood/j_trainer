@@ -11,6 +11,7 @@ class DrillsController < ApplicationController
   end
 
   def show
+    @drill = Drill.find(params[:id])
   end
 
   def update

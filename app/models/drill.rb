@@ -5,6 +5,16 @@ class Drill < ApplicationRecord
 
   after_save :update_counts!
 
+  def stats
+    {
+      correct: correct_count,
+      incorrect: incorrect_count,
+      pass: pass_count,
+      seen: clues_seen_count,
+      accuracy: accuracy
+    }
+  end
+
   def accuracy
     return "0%" if clues_seen_count.zero?
 

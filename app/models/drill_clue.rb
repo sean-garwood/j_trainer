@@ -13,6 +13,18 @@ class DrillClue < ApplicationRecord
 
   before_save :set_result
 
+  def correct?
+    result == :correct
+  end
+
+  def incorrect?
+    result == :incorrect
+  end
+
+  def passed?
+    result == :pass
+  end
+
   private
     def set_result
       case true

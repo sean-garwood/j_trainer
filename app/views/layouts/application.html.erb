@@ -13,17 +13,21 @@
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%# Includes Tailwind CSS %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
   <body>
-    <main class="container mx-auto mt-28 px-5 flex">
-      <% if current_user %>
+    <% if current_user? %>
+      <header class="sticky top-0 z-10 bg-gray-400 shadow-sm">
+        <div class="flex justify-between items-center px-6 py-4">
+          <%= render partial: "layouts/nav" %>
+          <%= render partial: "layouts/session" %>
+        </div>
         <%= render partial: "layouts/flash" unless flash.empty? %>
-        <%= render partial: "layouts/nav" %>
-        <%= render partial: "layouts/session" %>
-      <% end %>
+      </header>
+    <% end %>
+    <main class="min-h-screen w-full bg-gray-200">
       <%= yield %>
     </main>
   </body>
