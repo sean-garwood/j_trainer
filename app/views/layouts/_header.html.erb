@@ -1,0 +1,8 @@
+
+      <header class="sticky top-0 z-10 bg-gray-400 shadow-sm">
+        <div class="flex justify-between mx-4 items-center h-16">
+          <%= render partial: "layouts/header/nav" %>
+          <%= render partial: "layouts/header/session" %>
+        </div>
+        <%= render partial: "layouts/header/flash" unless flash.empty? %>
+      </header>

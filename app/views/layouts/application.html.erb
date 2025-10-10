@@ -19,13 +19,7 @@
   </head>
   <body>
     <% if current_user? %>
-      <header class="sticky top-0 z-10 bg-gray-400 shadow-sm">
-        <div class="flex justify-between items-center px-6 py-4">
-          <%= render partial: "layouts/nav" %>
-          <%= render partial: "layouts/session" %>
-        </div>
-        <%= render partial: "layouts/flash" unless flash.empty? %>
-      </header>
+      <%= render partial: "layouts/header" %>
     <% end %>
     <main class="min-h-screen w-full bg-gray-200">
       <%= yield %>
