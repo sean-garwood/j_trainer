@@ -15,7 +15,7 @@ class DrillClueTest < ActiveSupport::TestCase
 
   test "validates response time is acceptable" do
     @drill_clue = DrillClue.new(response_time: 16)
-    assert_not @drill_clue.valid?
+    assert_not @drill_clue.valid? "validated even though response time is too high"
   end
 
   test "sets result" do
@@ -25,6 +25,6 @@ class DrillClueTest < ActiveSupport::TestCase
       .new(drill: drills(:one), response_time: 1,
            clue: clue, response: question)
     @drill_clue.save
-    assert @drill_clue.correct?
+    assert @drill_clue.correct?, "should be correct"
   end
 end

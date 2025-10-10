@@ -14,15 +14,15 @@ class DrillClue < ApplicationRecord
   before_save :set_result
 
   def correct?
-    result == :correct
+    result == "correct"
   end
 
   def incorrect?
-    result == :incorrect
+    result == "incorrect"
   end
 
   def passed?
-    result == :pass
+    result == "pass"
   end
 
   private
