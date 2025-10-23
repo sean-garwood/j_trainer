@@ -13,42 +13,50 @@ The original monolithic plan has been broken down into focused, digestible modul
 ## Module Overview
 
 ### 00-overview.md
+
 **What it is**: High-level project context, architecture decisions, and success criteria
 **Read this**: Before starting implementation
 **Time**: 5 minutes
 
 ### 01-controller-refactoring.md
+
 **What it is**: Backend controller changes (DrillsController, DrillCluesController, routes)
 **Implement this**: First (easiest to test independently)
 **Time**: 2-3 hours
 
 ### 02-form-views.md
+
 **What it is**: Frontend form, Turbo Frames, views, and Turbo Streams
 **Implement this**: Third (after controllers and models)
 **Time**: 3-4 hours
 **Bonus**: Detailed explanation of `form_with` gotchas!
 
 ### 03-stimulus-fixes.md
+
 **What it is**: JavaScript timer controller bug fixes
 **Implement this**: Fourth
 **Time**: 1-2 hours
 
 ### 04-model-updates.md
+
 **What it is**: DrillClue model validation and matching logic improvements
 **Implement this**: Second (critical bugs need fixing first)
 **Time**: 1 hour
 
 ### 05-testing.md
+
 **What it is**: Comprehensive testing strategy (controller, model, system tests)
 **Implement this**: Fifth (or write tests as you go)
 **Time**: 3-4 hours
 
 ### 06-polish.md
+
 **What it is**: Optional UX enhancements (animations, keyboard shortcuts, accessibility)
 **Implement this**: Last (after MVP works)
 **Time**: 2-3 hours
 
 ### 99-reference.md
+
 **What it is**: Risk assessment, file summary, estimates, debugging tips
 **Use this**: Throughout implementation as a reference
 **Time**: Reference material
@@ -89,6 +97,7 @@ The original `drill-clue-form.md` (now `drill-clue-form.original.md`) was 1000+ 
 ## Quick Reference
 
 ### Files to Create (7)
+
 1. `app/controllers/drill_clues_controller.rb`
 2. `app/views/drills/_clue_form.html.erb`
 3. `app/views/drill_clues/create.turbo_stream.erb`
@@ -98,6 +107,7 @@ The original `drill-clue-form.md` (now `drill-clue-form.original.md`) was 1000+ 
 7. `app/views/drills/_stats.html.erb` (optional)
 
 ### Files to Modify (6)
+
 1. `app/controllers/drills_controller.rb`
 2. `app/models/drill_clue.rb`
 3. `app/views/drills/train.html.erb`
@@ -112,6 +122,7 @@ The original `drill-clue-form.md` (now `drill-clue-form.original.md`) was 1000+ 
 ## Need Help?
 
 Check `99-reference.md` for:
+
 - Common issues & solutions
 - Debugging tips
 - Risk mitigation strategies

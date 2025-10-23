@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_30_011317) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_23_165604) do
   create_table "clues", force: :cascade do |t|
     t.integer "round"
     t.integer "clue_value"
     t.integer "daily_double_value"
     t.text "category"
     t.text "comments"
-    t.text "answer"
-    t.text "question"
+    t.text "clue_text"
+    t.text "correct_response"
     t.text "air_date"
     t.text "notes"
     t.datetime "created_at", null: false

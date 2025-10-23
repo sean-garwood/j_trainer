@@ -26,7 +26,7 @@ This creates a conflict!
 private
   def set_result
     case true
-    when response_matches_question?
+    when response_matches_correct_response?
       self.result = :correct
     when response_indicates_pass?  # RENAMED to avoid collision
       self.result = :pass
@@ -80,26 +80,26 @@ validates :response_time,
 
 ```ruby
 # Current implementation (line 41)
-def response_matches_question?
-  Regexp.new(clue.question).match?(response)
+def response_matches_correct_response?
+  Regexp.new(clue.correct_response).match?(response)
 end
 ```
 
-**Problem**: Treats `clue.question` as a regex pattern, which may fail if it contains special regex characters like `(`, `)`, `[`, `]`, `.`, `*`, etc.
+**Problem**: Treats `clue.correct_response` as a regex pattern, which may fail if it contains special regex characters like `(`, `)`, `[`, `]`, `.`, `*`, etc.
 
 ### Example Failure
 
-If `clue.question = "What is C++?"`, this becomes a regex like `/What is C++?/`, which is invalid because `+` is a regex metacharacter.
+If `clue.correct_response = "What is C++?"`, this becomes a regex like `/What is C++?/`, which is invalid because `+` is a regex metacharacter.
 
 ### Improved Version
 
 ```ruby
 # Improved version - handles Jeopardy! format
-def response_matches_question?
+def response_matches_correct_response?
   return false if response.blank?
 
   # Extract answer from "What is X?" format if present
-  answer_text = clue.question.gsub(/\A(what|who|where|when|why) is\s+/i, '').gsub(/\??\z/, '').strip
+  answer_text = clue.correct_response.gsub(/\A(what|who|where|when|why) is\s+/i, '').gsub(/\??\z/, '').strip
 
   # Normalize both strings: downcase, remove punctuation, trim
   normalized_response = response.downcase.gsub(/[^a-z0-9\s]/, '').strip
@@ -113,15 +113,15 @@ end
 
 ### Key Improvements
 
-1. **Handles Jeopardy! Format**: Strips "What is", "Who is", etc. from the question
+1. **Handles Jeopardy! Format**: Strips "What is", "Who is", etc. from the correct response
 2. **Normalization**: Lowercases and removes punctuation
 3. **Bidirectional Matching**: Checks if either string contains the other
-4. **No Regex Parsing**: Treats clue.question as a string, not a regex
+4. **No Regex Parsing**: Treats clue.correct_response as a string, not a regex
 
 ### Example
 
 ```ruby
-clue.question = "What is the Jordan?"
+clue.correct_response = "What is the Jordan?"
 response = "jordan"
 
 # After normalization:
@@ -133,19 +133,13 @@ normalized_response = "jordan"
 
 ---
 
-## Understanding Jeopardy! Format
+## Understanding Database Field Naming
 
-In the Jeopardy! data format:
-- **`clue.answer`** = "the Jordan" (what we SHOW users - the clue)
-- **`clue.question`** = "What is the Jordan?" or just "the Jordan" (the correct response)
+In our database, we use intuitive field names:
+- **`clue.clue_text`** = "River mentioned most often in the Bible" (what we SHOW users - the clue)
+- **`clue.correct_response`** = "What is the Jordan?" (the correct response)
 
-**Confusing?** Yes! This is because in the TV show:
-- Host reads the "answer" (a statement)
-- Contestants respond with the "question" (phrased as a question)
-
-Example:
-- **Clue shown to user**: "River mentioned most often in the Bible" (`clue.answer`)
-- **Correct response**: "What is the Jordan?" (`clue.question`)
+This is clearer than the TSV format which uses "answer" for the clue text and "question" for the correct response.
 
 ---
 
@@ -179,7 +173,7 @@ class DrillClue < ApplicationRecord
 
   def set_result
     case true
-    when response_matches_question?
+    when response_matches_correct_response?
       self.result = :correct
     when response_indicates_pass?  # FIX: Renamed from passed?
       self.result = :pass
@@ -188,11 +182,11 @@ class DrillClue < ApplicationRecord
     end
   end
 
-  def response_matches_question?
+  def response_matches_correct_response?
     return false if response.blank?
 
     # Extract answer from "What is X?" format if present
-    answer_text = clue.question.gsub(/\A(what|who|where|when|why) is\s+/i, '').gsub(/\??\z/, '').strip
+    answer_text = clue.correct_response.gsub(/\A(what|who|where|when|why) is\s+/i, '').gsub(/\??\z/, '').strip
 
     # Normalize both strings: downcase, remove punctuation, trim
     normalized_response = response.downcase.gsub(/[^a-z0-9\s]/, '').strip
@@ -222,7 +216,7 @@ end
 
 ## Testing Checklist
 
-- [ ] Test `response_matches_question?` with various inputs:
+- [ ] Test `response_matches_correct_response?` with various inputs:
   - Exact match: "the Jordan" vs "the Jordan" → correct
   - Case insensitive: "jordan" vs "the Jordan" → correct
   - Partial match: "jordan" vs "the Jordan River" → correct
@@ -252,7 +246,7 @@ end
 ```ruby
 require 'levenshtein'
 
-def response_matches_question?
+def response_matches_correct_response?
   return false if response.blank?
 
   distance = Levenshtein.distance(normalized_response, normalized_answer)
@@ -281,7 +275,7 @@ end
 ```ruby
 enum :result, { correct: 2, partial: 1, pass: 0, incorrect: -1 }
 
-def response_matches_question?
+def response_matches_correct_response?
   if exact_match?
     :correct
   elsif partial_match?

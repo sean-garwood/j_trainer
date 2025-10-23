@@ -28,7 +28,7 @@ class DrillClue < ApplicationRecord
   private
     def set_result
       case true
-      when response_matches_question?
+      when response_matches_correct_response?
         self.result = :correct
       when passed?
         self.result = :pass
@@ -37,8 +37,8 @@ class DrillClue < ApplicationRecord
       end
     end
 
-    def response_matches_question?
-      Regexp.new(clue.question).match?(response) # jeopardy-style
+    def response_matches_correct_response?
+      Regexp.new(clue.correct_response).match?(response)
     end
 
     def no_buzz?

@@ -8,7 +8,7 @@
         <h2><%= @clue.category %></h2>
         <h4>$<%= @clue.clue_value %></h4>
         <h5><%= @clue.round === 2 ? "Double" : "" %> Jeopardy! Round</h5>
-        <p><%= @clue.answer %></p>
+        <p><%= @clue.clue_text %></p>
       <% end %>
     </div>
     <div id="user-response-form"> <%# form for user resonses.%>

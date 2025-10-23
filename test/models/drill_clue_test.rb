@@ -20,10 +20,10 @@ class DrillClueTest < ActiveSupport::TestCase
 
   test "sets result" do
     clue = clues(:one)
-    question = clue.question
+    correct_response = clue.correct_response
     @drill_clue = DrillClue
       .new(drill: drills(:one), response_time: 1,
-           clue: clue, response: question)
+           clue: clue, response: correct_response)
     @drill_clue.save
     assert @drill_clue.correct?, "should be correct"
   end

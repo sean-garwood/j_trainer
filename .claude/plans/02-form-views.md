@@ -97,9 +97,9 @@ Build the interactive training form with Turbo Frames for seamless clue progress
     <h2 class="text-2xl font-bold text-indigo-900 mb-2"><%= clue.category %></h2>
     <div class="text-4xl font-bold text-green-600 mb-6">$<%= number_with_delimiter(clue.clue_value) %></div>
 
-    <!-- Clue Text (this is the "answer" in Jeopardy format) -->
+    <!-- Clue Text -->
     <div class="bg-blue-900 text-white text-xl p-6 rounded-lg min-h-[120px] flex items-center justify-center">
-      <%= clue.answer %>
+      <%= clue.clue_text %>
     </div>
   </div>
 
@@ -169,8 +169,8 @@ Build the interactive training form with Turbo Frames for seamless clue progress
 
 ### Clue Display Notes
 
-- **Shows `clue.answer`**: In Jeopardy! format, the "answer" is what's shown to players
-- **User enters `question`**: The correct response (e.g., "What is the Jordan?")
+- **Shows `clue.clue_text`**: The clue text shown to the player
+- **User enters response**: The correct response (e.g., "What is the Jordan?") is compared against `clue.correct_response`
 - **Round Badge**: Displays Jeopardy!/Double Jeopardy!/Final Jeopardy!
 - **Category & Value**: Prominent display for context
 

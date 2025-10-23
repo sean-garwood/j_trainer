@@ -12,7 +12,7 @@ class Clue < ApplicationRecord
   validates :round,
     presence: true,
     inclusion: { in: 1..3 }
-  validates :category, :question, :answer, :air_date, presence: true
+  validates :category, :clue_text, :correct_response, :air_date, presence: true
 
   before_validation :normalize_clue_value
 

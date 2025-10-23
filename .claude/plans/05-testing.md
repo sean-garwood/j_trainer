@@ -35,7 +35,7 @@ class DrillCluesControllerTest < ActionDispatch::IntegrationTest
       post drill_drill_clues_path(@drill), params: {
         drill_clue: {
           clue_id: @clue.id,
-          response: @clue.question,
+          response: @clue.correct_response,
           response_time: 3.5
         }
       }
@@ -76,7 +76,7 @@ class DrillCluesControllerTest < ActionDispatch::IntegrationTest
     post drill_drill_clues_path(@drill), params: {
       drill_clue: {
         clue_id: @clue.id,
-        response: @clue.question,
+        response: @clue.correct_response,
         response_time: 1.0
       }
     }, headers: { "Accept" => "text/vnd.turbo-stream.html" }
@@ -107,7 +107,7 @@ class DrillCluesControllerTest < ActionDispatch::IntegrationTest
     post drill_drill_clues_path(@drill), params: {
       drill_clue: {
         clue_id: @clue.id,
-        response: @clue.question,
+        response: @clue.correct_response,
         response_time: 1.5
       }
     }
@@ -206,7 +206,7 @@ end
 
 test "response matching is case insensitive" do
   clue = clues(:one)
-  # Assume clue.question = "the Jordan"
+  # Assume clue.correct_response = "the Jordan"
 
   drill_clue = DrillClue.new(
     drill: drills(:one),
@@ -242,7 +242,7 @@ end
 
 test "partial response matches full answer" do
   clue = clues(:one)
-  # Assume clue.question = "the Jordan River"
+  # Assume clue.correct_response = "the Jordan River"
 
   drill_clue = DrillClue.new(
     drill: drills(:one),

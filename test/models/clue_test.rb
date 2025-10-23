@@ -40,15 +40,15 @@ class ClueTest < ActiveSupport::TestCase
     assert_not clue.valid?
   end
 
-  test "invalid without answer" do
+  test "invalid without clue_text" do
     clue = @clue_one
-    clue.answer = nil
+    clue.clue_text = nil
     assert_not clue.valid?
   end
 
-  test "invalid without question" do
+  test "invalid without correct_response" do
     clue = @clue_one
-    clue.question = nil
+    clue.correct_response = nil
     assert_not clue.valid?
   end
 

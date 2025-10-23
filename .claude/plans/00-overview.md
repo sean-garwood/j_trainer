@@ -19,7 +19,6 @@ This document provides a high-level overview of the drill training form implemen
 2. **Missing Form**: No form exists in `train.html.erb`
 3. **No Response Capture**: No mechanism to submit user answers
 4. **No Self-Judging Flow**: No UI for users to confirm correct/incorrect/pass
-5. **Incorrect Display**: Shows `@clue.answer` instead of `@clue.question` (the clue text)
 
 ## Architecture Decisions
 

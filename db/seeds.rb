@@ -15,16 +15,16 @@ sample_clues = [
     round: 1,
     clue_value: 200,
     category: "HISTORY",
-    answer: "This document, signed in 1215, limited the power of the English monarch",
-    question: "What is the Magna Carta?",
+    clue_text: "This document, signed in 1215, limited the power of the English monarch",
+    correct_response: "What is the Magna Carta?",
     air_date: "2022-01-15"
   },
   {
     round: 2,
     clue_value: 400,
     category: "SCIENCE",
-    answer: "This element with atomic number 79 has the chemical symbol Au",
-    question: "What is Gold?",
+    clue_text: "This element with atomic number 79 has the chemical symbol Au",
+    correct_response: "What is Gold?",
     air_date: "2022-01-15"
   }
 ]

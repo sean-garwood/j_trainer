@@ -13,7 +13,7 @@ This plan outlines the implementation of an interactive training form for the J!
    - `response` (string): User's answer
    - `response_time` (float): Time taken to answer
    - `result` (enum): correct (-1), pass (0), incorrect (1)
-   - Auto-validation logic based on regex matching against clue.question
+   - Auto-validation logic based on regex matching against clue.correct_response
 3. **Stimulus Controller**: `response_timer_controller.js` exists with timer logic
 4. **Game Settings**: Configurable buzz time (5s) and response time (15s)
 
@@ -23,7 +23,7 @@ This plan outlines the implementation of an interactive training form for the J!
 2. **Missing Form**: No form exists in `train.html.erb` (line 14-16 is placeholder)
 3. **No Response Capture**: No mechanism to submit user answers
 4. **No Self-Judging Flow**: No UI for users to confirm correct/incorrect/pass
-5. **Incorrect Display**: Shows `@clue.answer` instead of `@clue.question` (the clue text)
+5. **Incorrect Display**: Shows `@clue.clue_text` instead of `@clue.correct_response` (the clue text)
 
 ## Architecture Approach
 
@@ -80,7 +80,7 @@ This plan outlines the implementation of an interactive training form for the J!
 
 ### Self-Judging UI Flow
 
-Since the DrillClue model already has auto-validation logic (`response_matches_question?`), we have two options:
+Since the DrillClue model already has auto-validation logic (`response_matches_correct_response?`), we have two options:
 
 **Option A: Auto-Judge Only (Simpler)**
 - Submit response → server auto-judges → show next clue
@@ -300,7 +300,7 @@ end
 
     <!-- Clue Text (this is the "answer" in Jeopardy format) -->
     <div class="bg-blue-900 text-white text-xl p-6 rounded-lg min-h-[120px] flex items-center justify-center">
-      <%= clue.answer %>
+      <%= clue.clue_text %>
     </div>
   </div>
 
@@ -497,7 +497,7 @@ export default class extends Controller {
 private
   def set_result
     case true
-    when response_matches_question?
+    when response_matches_correct_response?
       self.result = :correct
     when response_indicates_pass?  # RENAMED to avoid collision
       self.result = :pass
@@ -532,24 +532,24 @@ The existing auto-validation logic has a potential issue:
 
 ```ruby
 # Current implementation in app/models/drill_clue.rb (line 41)
-def response_matches_question?
-  Regexp.new(clue.question).match?(response)
+def response_matches_correct_response?
+  Regexp.new(clue.correct_response).match?(response)
 end
 ```
 
-**Problem**: Treats `clue.question` as a regex pattern, which may fail if it contains special regex characters.
+**Problem**: Treats `clue.correct_response` as a regex pattern, which may fail if it contains special regex characters.
 
 **Solution**: Use string matching or fuzzy matching instead. Note that in Jeopardy! format:
-- `clue.answer` = "the Jordan" (what we SHOW users - the clue)
-- `clue.question` = "What is the Jordan?" or just "the Jordan" (the correct response)
+- `clue.clue_text` = "the Jordan" (what we SHOW users - the clue)
+- `clue.correct_response` = "What is the Jordan?" or just "the Jordan" (the correct response)
 
 ```ruby
 # Improved version - handles Jeopardy! format
-def response_matches_question?
+def response_matches_correct_response?
   return false if response.blank?
 
   # Extract answer from "What is X?" format if present
-  answer_text = clue.question.gsub(/\A(what|who|where|when|why) is\s+/i, '').gsub(/\??\z/, '').strip
+  answer_text = clue.correct_response.gsub(/\A(what|who|where|when|why) is\s+/i, '').gsub(/\??\z/, '').strip
 
   # Normalize both strings: downcase, remove punctuation, trim
   normalized_response = response.downcase.gsub(/[^a-z0-9\s]/, '').strip
@@ -597,7 +597,7 @@ class DrillCluesControllerTest < ActionDispatch::IntegrationTest
       post drill_drill_clues_path(@drill), params: {
         drill_clue: {
           clue_id: @clue.id,
-          response: @clue.question,
+          response: @clue.correct_response,
           response_time: 3.5
         }
       }
@@ -638,7 +638,7 @@ class DrillCluesControllerTest < ActionDispatch::IntegrationTest
     post drill_drill_clues_path(@drill), params: {
       drill_clue: {
         clue_id: @clue.id,
-        response: @clue.question,
+        response: @clue.correct_response,
         response_time: 1.0
       }
     }, headers: { "Accept" => "text/vnd.turbo-stream.html" }
@@ -863,7 +863,7 @@ Add Turbo loading indicators:
 - [ ] Add keyboard shortcuts (optional)
 
 ### Phase 4: Model Updates
-- [ ] Improve `response_matches_question?` logic
+- [ ] Improve `response_matches_correct_response?` logic
 - [ ] Simplify `passed?` method
 - [ ] Add model tests for new logic
 - [ ] Test edge cases (special characters, empty responses)
