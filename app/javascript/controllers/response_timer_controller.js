@@ -2,92 +2,61 @@ import { Controller } from "@hotwired/stimulus";
 import { MAX_RESPONSE_TIME, MAX_BUZZ_TIME } from "../constants";
 
 export default class extends Controller {
-  static targets = ["timeField", "buzzTimeField", "input", "countdown"];
+  static targets = ["timeField", "input", "countdown"];
   static values = {
-    maxResponseTime: MAX_RESPONSE_TIME,
-    maxBuzzTime: MAX_BUZZ_TIME,
+    maxResponseTime: Number,
+    maxBuzzTime: Number,
   };
 
   get now() {
-    new Date().getTime();
+    return new Date().getTime(); // FIX: Added return
   }
 
   connect() {
     this.clueDisplayTime = this.now;
-    this.buzzTime = null;
-    this.inputTarget.focus();
+    this.responseTime = null;
     this.maxBuzzTime = this.maxBuzzTimeValue || MAX_BUZZ_TIME;
-    this.maxResponseTime = this.MaxResponseTimeValue || MAX_RESPONSE_TIME;
-    this.startBuzzCountdown();
-  }
-
-  buzzIn() {
-    if (!this.buzzTime) {
-      this.buzzTime = this.now - this.clueDisplayTime;
-      this.buzzTimeFieldTarget.value = this.buzzTime;
-
-      clearInterval(this.buzzInterval);
-      this.startResponseCountdown();
-    }
-  }
-
-  startBuzzCountdown() {
-    let timeLeft = this.maxBuzzTime;
-
-    this.countdownTarget.textContent = this.#countdown("Buzz in?");
-    this.buzzInterval = setInterval(() => {
-      timeLeft -= 0.1;
-      this.countdownTarget.textContent = ``;
-
-      if (timeLeft <= 0) {
-        clearInterval(this.buzzInterval);
-        this.countdownTarget.textContent = "Time's up!";
-        this.timeFieldTarget.value = this.maxBuzzTime * 1000;
-        this.element.requestSubmit();
-      }
-    }, 100);
+    this.maxResponseTime = this.maxResponseTimeValue || MAX_RESPONSE_TIME; // FIX: Typo
+    this.startResponseCountdown();
   }
 
   startResponseCountdown() {
-    let timeLeft = this.maxResponseTime;
-    this.countdownTarget.textContent = this.#countdown("Answer!");
+    this.timeLeft = this.maxResponseTime; // FIX: Define in scope
+    this.updateCountdown();
 
     this.responseInterval = setInterval(() => {
-      timeLeft -= 0.1;
-      this.countdownTarget.textContent = this.#countdown("Answer!");
+      this.timeLeft -= 0.1;
+      this.updateCountdown();
 
-      if (timeLeft <= 0) {
+      if (this.timeLeft <= 0) {
         clearInterval(this.responseInterval);
         this.countdownTarget.textContent = "Time's up!";
-        this.inputTarget.disabled = true; // nil input == pass
-        this.timeFieldTarget.value = this.maxResponseTime * 1000;
-        this.element.requestSubmit();
+        this.inputTarget.disabled = true;
+        this.timeFieldTarget.value = this.maxResponseTime;
+        this.element.requestSubmit(); // Auto-submit when timer expires
       }
-    }, 100);
+    }, 100); // Update every 100ms for smooth countdown
   }
 
-  beforeSubmit(e) {
+  updateCountdown() {
+    const secondsLeft = this.timeLeft.toFixed(1);
+    this.countdownTarget.textContent = `Time remaining: ${secondsLeft}s`;
+  }
+
+  beforeSubmit(event) {
     const endTime = this.now;
-    const responseTime = endTime - this.clueDisplayTime;
+    const responseTime = (endTime - this.clueDisplayTime) / 1000; // Convert to seconds
     this.timeFieldTarget.value = responseTime;
-    this.#clearIntervals();
+    this.clearIntervals();
   }
 
   disconnect() {
-    this.#clearIntervals();
+    this.clearIntervals();
   }
 
-  #countdown(prefix) {
-    const secondsLeft = timeLeft.toFixed(1);
-
-    return `${prefix} ${secondsLeft}s`;
-  }
-
-  #clearIntervals() {
-    const intervals = [this.buzzInterval, this.responseInterval];
-
-    for (const interval in intervals) {
-      clearInterval(interval);
+  clearIntervals() {
+    if (this.responseInterval) {
+      clearInterval(this.responseInterval); // FIX: Correct syntax
     }
   }
 }
