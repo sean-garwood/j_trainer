@@ -17,27 +17,35 @@ class DrillsController < ApplicationController
   def update
   end
 
-  # HACK: this is a temporary solution to get the drill working
   def train
-    if session[:current_drill_id].present?
-      @drill = Drill.find(session[:current_drill_id])
-    end
-
-    if @drill.nil?
-      @drill = Drill.create(user: current_user)
-      session[:current_drill_id] = @drill.id
-    end
-
+    @drill = find_or_create_current_drill
     @clue = @drill.fetch_clue
+
     if @clue.nil?
-      @drill.save
-      session[:current_drill_id] = nil
-      redirect_to drills_path, notice: "Drill saved."
+      end_drill
     else
-      @drill.save
-      # HACK: response time is always 0 for now
-      @drill.drill_clues.create(clue_id: @clue.id, response_time: 0)
-      session[:current_drill_id] = @drill.id
+      @drill_clue = DrillClue.new(drill: @drill, clue: @clue)
+      # Don't save yet - wait for user response
     end
+  end
+
+  private
+
+  def find_or_create_current_drill
+    if session[:current_drill_id].present?
+      Drill.find(session[:current_drill_id])
+    else
+      # OPTIMIZE: current_user.drills.build
+      drill = Drill.create!(user: current_user)
+      session[:current_drill_id] = drill.id
+      drill
+    end
+  end
+
+  def end_drill
+    current_drill = Drill.find(session[:current_drill_id])
+    current_drill.update(ended_at: Time.current)
+    session[:current_drill_id] = nil
+    redirect_to drill_path(current_drill), notice: "Drill completed! Great work!"
   end
 end

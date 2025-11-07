@@ -30,29 +30,30 @@ class Drill < ApplicationRecord
     clue
   end
 
+  def update_counts!
+    total = drill_clues.count
+    correct = drill_clues.correct.count
+    incorrect = drill_clues.incorrect.count
+    passed = drill_clues.pass.count
+
+    Rails.logger.info "
+    Updating drill counts:
+      total=#{total},
+      correct=#{correct},
+      incorrect=#{incorrect},
+      pass=#{passed}
+    "
+
+    self.update_columns(
+      clues_seen_count: total,
+      correct_count: correct,
+      incorrect_count: incorrect,
+      pass_count: passed,
+      updated_at: Time.current
+    )
+  end
+
   private
-    def update_counts!
-      total = drill_clues.count
-      correct = drill_clues.correct.count
-      incorrect = drill_clues.incorrect.count
-      passed = drill_clues.pass.count
-
-      Rails.logger.info "
-      Updating drill counts:
-        total=#{total},
-        correct=#{correct},
-        incorrect=#{incorrect},
-        pass=#{passed}
-      "
-
-      self.update_columns(
-        clues_seen_count: total,
-        correct_count: correct,
-        incorrect_count: incorrect,
-        pass_count: passed,
-        updated_at: Time.current
-      )
-    end
 
     # TODO: session storage/cookie
     def unseen_clue_ids

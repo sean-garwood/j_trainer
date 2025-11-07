@@ -1,0 +1,85 @@
+<%# TODO: Partial this up %>
+<%#           Find some kind of auto formatting solution %>
+<div class="bg-white rounded-lg shadow-lg p-8">
+  <!-- Clue Display -->
+  <div class="mb-8 text-center">
+    <div class="mb-4">
+      <span class="inline-block px-4 py-1 bg-blue-100
+                   text-blue-800 rounded-full text-sm font-semibold">
+        <%= (clue.round == 1 ? "" : clue.round == 2 ? "Double " : "Final ")  +
+        "Jeopardy!"%>
+      </span>
+    </div>
+
+    <h2 class="text-2xl font-bold text-indigo-900 mb-2">
+      <%= clue.category %>
+    </h2>
+    <div class="text-4xl font-bold text-green-600 mb-6">
+      $<%= number_with_delimiter(clue.clue_value) %>
+      </div>
+
+    <!-- Clue Text -->
+    <div class="bg-blue-900 text-black text-xl p-6 rounded-lg min-h-[120px]
+                flex items-center justify-center">
+      <%= clue.clue_text %>
+    </div>
+  </div>
+
+  <!-- Response Form -->
+  <%= form_with model: drill_clue,
+                url: drill_drill_clues_path(drill),
+                data: {
+                  controller: "response-timer",
+                  turbo_frame: "drill_clue_frame",
+                  action: "turbo:submit-start->response-timer#beforeSubmit"
+                },
+                class: "space-y-4" do |form| %>
+
+    <%= form.hidden_field :clue_id, value: clue.id %>
+    <%= form.hidden_field :response_time,
+                          value: 0,
+                          data: { response_timer_target: "timeField" } %>
+
+    <!-- User Response Input -->
+    <div>
+      <%= form.label :response, "What is...",
+                     class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= form.text_field :response,
+                          placeholder:
+                            "Enter your answer (or leave blank to pass)",
+                          autofocus: true,
+                          autocomplete: "off",
+                          data: { response_timer_target: "input" },
+                          class:
+                          "w-full px-4 py-3 text-lg border-2 border-gray-300
+                          rounded-lg focus:border-indigo-500 focus:ring-2
+                          focus:ring-indigo-200" %>
+    </div>
+
+    <!-- Timer Display -->
+    <div class="text-center">
+      <div data-response-timer-target="countdown"
+           class="text-2xl font-bold text-gray-700">
+        Ready...
+      </div>
+    </div>
+
+    <!-- Submit Buttons -->
+    <div class="flex gap-3">
+      <%# FIXIT: does not apply tailwind correctly %>
+      <%= form.submit "Submit Answer",
+                      class: "flex-1 px-6 py-3 bg-indigo-600 text-white
+                      font-semibold rounded-lg hover:bg-indigo-700
+                      iocus:outline-none focus:ring-2 focus:ring-indigo-500
+                      focus:ring-offset-2" %>
+
+      <%= link_to "Pass",
+                  drill_drill_clues_path(drill, drill_clue: { clue_id: clue.id, response: "pass", response_time: 0 }),
+                  data: {
+                    turbo_method: :post,
+                    turbo_frame: "drill_clue_frame"
+                  },
+                  class: "px-6 py-3 bg-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2" %>
+    </div>
+  <% end %>
+</div>
