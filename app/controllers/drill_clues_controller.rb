@@ -14,6 +14,10 @@ class DrillCluesController < ApplicationController
         session[:current_drill_id] = nil
         redirect_to drill_path(@drill), notice: "Drill completed!"
       else
+        # FIXIT: duplicate code with DrillController#train
+        # Decide which place is best for this logic
+
+        # OPTIMIZE: @drill.drill_clues.build?
         # Prepare next drill clue (unsaved)
         @drill_clue = DrillClue.new(drill: @drill, clue: @clue)
 

@@ -35,6 +35,7 @@ class DrillsController < ApplicationController
     if session[:current_drill_id].present?
       Drill.find(session[:current_drill_id])
     else
+      # OPTIMIZE: current_user.drills.build
       drill = Drill.create!(user: current_user)
       session[:current_drill_id] = drill.id
       drill
