@@ -82,7 +82,7 @@ Build the interactive training form with Turbo Frames for seamless clue progress
 
 **File**: `/app/views/drills/_clue_form.html.erb`
 
-### Code
+### Form/View Code
 
 ```erb
 <div class="bg-white rounded-lg shadow-lg p-8">
@@ -251,6 +251,7 @@ In Rails 7+, `form_with` defaults to remote (AJAX) submission. Turbo handles thi
 ### Gotcha 2: Nested Routes
 
 Always explicitly set `url:` for nested routes:
+
 ```erb
 url: drill_drill_clues_path(drill)
 ```
@@ -258,6 +259,7 @@ url: drill_drill_clues_path(drill)
 ### Gotcha 3: Model State
 
 The model passed to `form_with` should be in the state you want:
+
 - For new records: `DrillClue.new(drill: @drill, clue: @clue)`
 - Form will POST to `drill_drill_clues_path`
 

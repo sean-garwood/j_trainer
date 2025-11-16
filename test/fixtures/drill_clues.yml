@@ -4,21 +4,10 @@ one:
   drill: one
   clue: one
   response_time: 1.5
-  response: MyString
+  response: wrong answer # will be marked as incorrect
 
 two:
   drill: two
   clue: two
   response_time: 1.5
-  response: MyText
-
-pass_on_timeout:
-  drill: two
-  clue: two
-  response_time: 100 # too long, timeout == pass
-
-pass_on_response:
-  drill: two
-  clue: two
-  response_time: 14.9
-  response: pass
+  response: Abraham Lincoln # correct answer for clue two

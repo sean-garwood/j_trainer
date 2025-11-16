@@ -12,6 +12,9 @@ Rails.application.routes.draw do
     collection do
       get :train, to: "drills#train" # live training session.
     end
+
+    # Nested route for submitting responses
+    resources :drill_clues, only: [ :create ]
   end
 
   root "drills#index"

@@ -4,8 +4,16 @@ one:
   user: one
   started_at: 2025-04-26 22:58:22
   ended_at: 2025-04-26 22:58:21
+  correct_count: 0
+  incorrect_count: 0
+  pass_count: 0
+  clues_seen_count: 0
 
 two:
   user: two
   started_at: 2025-04-26 22:58:21
   ended_at: 2025-04-26 22:58:21
+  correct_count: 0
+  incorrect_count: 0
+  pass_count: 0
+  clues_seen_count: 0
