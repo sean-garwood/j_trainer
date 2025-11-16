@@ -4,8 +4,8 @@ import { MAX_RESPONSE_TIME, MAX_BUZZ_TIME } from "../constants";
 export default class extends Controller {
   static targets = ["timeField", "input", "countdown"];
   static values = {
-    maxResponseTime: Number,
-    maxBuzzTime: Number,
+    maxResponseTime: { type: Number, default: MAX_RESPONSE_TIME },
+    maxBuzzTime: { type: Number, default: MAX_BUZZ_TIME },
   };
 
   get now() {
@@ -15,8 +15,8 @@ export default class extends Controller {
   connect() {
     this.clueDisplayTime = this.now;
     this.responseTime = null;
-    this.maxBuzzTime = this.maxBuzzTimeValue || MAX_BUZZ_TIME;
-    this.maxResponseTime = this.maxResponseTimeValue || MAX_RESPONSE_TIME; // FIX: Typo
+    this.maxBuzzTime = this.maxBuzzTimeValue;
+    this.maxResponseTime = this.maxResponseTimeValue;
     this.startResponseCountdown();
   }
 
