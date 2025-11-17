@@ -19,7 +19,7 @@
           <tr>
             <td class="text-blue-600 hover:text-blue-800
             visited:text-purple-600">
-              <%= link_to drill.created_at.localtime.strftime("%Y-%m-%d %H:%M"),
+              <%= link_to drill.created_at.localtime.strftime("%Y-%m-%d"),
                           drill_path(drill) %>
             </td>
             <td><%= drill.correct_count %></td>
