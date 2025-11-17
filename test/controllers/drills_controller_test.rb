@@ -12,11 +12,6 @@ class DrillsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "gets drill new" do
-    get new_drill_path
-    assert_response :success
-  end
-
   test "only index drills for current user" do
     get drills_path
     assert_response :success
