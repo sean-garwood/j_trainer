@@ -31,11 +31,11 @@ class DrillsController < ApplicationController
 
   private
 
+  # OPTIMIZE: current_user.drills.build
   def find_or_create_current_drill
     if session[:current_drill_id].present?
       Drill.find(session[:current_drill_id])
     else
-      # OPTIMIZE: current_user.drills.build
       drill = Drill.create!(user: current_user)
       session[:current_drill_id] = drill.id
       drill
@@ -47,5 +47,9 @@ class DrillsController < ApplicationController
     current_drill.update(ended_at: Time.current)
     session[:current_drill_id] = nil
     redirect_to drill_path(current_drill), notice: "Drill completed! Great work!"
+  end
+
+  def drill_params
+    params.expect(drill: [ :id ])
   end
 end

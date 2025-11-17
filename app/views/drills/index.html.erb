@@ -1,5 +1,7 @@
 <div class="flex items-center justify-center h-screen" id="drill-index-container">
   <div>
+    <%# TODO: Apply table styles %>
+    <%# TODO: paginate %>
     <table>
       <caption class="text-center text-2xl">Your drills</caption>
       <thead>
@@ -15,7 +17,11 @@
       <tbody>
         <% @drills.each do |drill| %>
           <tr>
-            <td><%= drill.created_at %></td>
+            <td class="text-blue-600 hover:text-blue-800
+            visited:text-purple-600">
+              <%= link_to drill.created_at.localtime.strftime("%Y-%m-%d %H:%M"),
+                          drill_path(drill) %>
+            </td>
             <td><%= drill.correct_count %></td>
             <td><%= drill.incorrect_count %></td>
             <td><%= drill.pass_count %></td>
