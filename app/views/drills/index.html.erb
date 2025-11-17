@@ -1,35 +1,154 @@
-<div class="flex items-center justify-center h-screen" id="drill-index-container">
-  <div>
-    <%# TODO: Apply table styles %>
-    <%# TODO: paginate %>
-    <table>
-      <caption class="text-center text-2xl">Your drills</caption>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Correct</th>
-          <th>Incorrect</th>
-          <th>Pass</th>
-          <th>Total</th>
-          <th>Accuracy</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @drills.each do |drill| %>
-          <tr>
-            <td class="text-blue-600 hover:text-blue-800
-            visited:text-purple-600">
-              <%= link_to drill.created_at.localtime.strftime("%Y-%m-%d"),
-                          drill_path(drill) %>
-            </td>
-            <td><%= drill.correct_count %></td>
-            <td><%= drill.incorrect_count %></td>
-            <td><%= drill.pass_count %></td>
-            <td><%= drill.clues_seen_count %></td>
-            <td><%= drill.accuracy %></td>
-          </tr>
+<div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Your Drills</h1>
+      <p class="text-gray-600">Track your Jeopardy! training progress</p>
+    </div>
+
+    <!-- Drills Table -->
+    <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Date
+              </th>
+              <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Correct
+              </th>
+              <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Incorrect
+              </th>
+              <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Pass
+              </th>
+              <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Total
+              </th>
+              <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Accuracy
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @drills.each do |drill| %>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <%= link_to drill.created_at.localtime.strftime("%Y-%m-%d %H:%M"),
+                              drill_path(drill),
+                              class: "text-blue-600 hover:text-blue-800 font-medium" %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    <%= drill.correct_count %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                    <%= drill.incorrect_count %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                    <%= drill.pass_count %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-gray-900">
+                  <%= drill.clues_seen_count %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-semibold">
+                  <span class="<%= drill.correct_count.to_f / drill.clues_seen_count >= 0.7 ? 'text-green-600' : drill.correct_count.to_f / drill.clues_seen_count >= 0.5 ? 'text-yellow-600' : 'text-red-600' %>">
+                    <%= drill.accuracy %>
+                  </span>
+                </td>
+              </tr>
+            <% end %>
+
+            <!-- Summary Row -->
+            <%
+              total_correct = @drills.sum(&:correct_count)
+              total_incorrect = @drills.sum(&:incorrect_count)
+              total_pass = @drills.sum(&:pass_count)
+              total_seen = @drills.sum(&:clues_seen_count)
+              avg_accuracy = total_seen > 0 ? ((total_correct.to_f / total_seen) * 100).round(2) : 0
+            %>
+            <tr class="bg-blue-50 font-semibold">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                Page Totals
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-200 text-green-900">
+                  <%= total_correct %>
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-200 text-red-900">
+                  <%= total_incorrect %>
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200 text-gray-900">
+                  <%= total_pass %>
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">
+                <%= total_seen %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold">
+                <span class="<%= avg_accuracy >= 70 ? 'text-green-700' : avg_accuracy >= 50 ? 'text-yellow-700' : 'text-red-700' %>">
+                  <%= avg_accuracy %>%
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex items-center justify-between px-4 py-3 bg-white rounded-lg shadow sm:px-6">
+      <div class="flex-1 flex justify-between sm:hidden">
+        <!-- Mobile pagination -->
+        <% if @pagy.prev %>
+          <%= link_to "Previous", drills_path(page: @pagy.prev),
+              class: "relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+        <% else %>
+          <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-400 bg-gray-100 cursor-not-allowed">
+            Previous
+          </span>
         <% end %>
-      </tbody>
-    </table>
+        <% if @pagy.next %>
+          <%= link_to "Next", drills_path(page: @pagy.next),
+              class: "ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+        <% else %>
+          <span class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-400 bg-gray-100 cursor-not-allowed">
+            Next
+          </span>
+        <% end %>
+      </div>
+      <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm text-gray-700">
+            Showing
+            <span class="font-medium"><%= @pagy.from %></span>
+            to
+            <span class="font-medium"><%= @pagy.to %></span>
+            of
+            <span class="font-medium"><%= @pagy.count %></span>
+            drills
+          </p>
+        </div>
+        <div>
+          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+            <%== pagy_nav(@pagy,
+              link_extra: 'class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"',
+              page_link_extra: 'class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"'
+            ) %>
+          </nav>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

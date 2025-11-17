@@ -19,7 +19,8 @@ class DrillsControllerTest < ActionDispatch::IntegrationTest
     user_drills_count = @user.drills.count
     new_drill = users(:two).drills.create!
     assert_equal 2, users(:two).drills.count
-    assert_select "tbody>tr", count: user_drills_count
+    # +1 for the summary row
+    assert_select "tbody>tr", count: user_drills_count + 1
     new_drill.destroy!
   end
 

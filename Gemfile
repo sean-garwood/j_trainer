@@ -72,4 +72,7 @@ gem "tailwindcss-rails", "~> 4.2"
 # Authenticate resources available to users
 gem "cancancan"
 
+# Pagination
+gem "pagy", "~> 9.0"
+
 gem "rubocop", "~> 1.81"

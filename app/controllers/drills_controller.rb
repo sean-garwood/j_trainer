@@ -2,6 +2,8 @@ class DrillsController < ApplicationController
   load_and_authorize_resource
 
   def index
+    # Paginate drills, ordered by most recent first, 10 per page
+    @pagy, @drills = pagy(@drills.order(created_at: :desc), limit: 10)
   end
 
   def new
