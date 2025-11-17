@@ -19,7 +19,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_23_165604) do
     t.text "comments"
     t.text "clue_text"
     t.text "correct_response"
-    t.text "air_date"
+    t.string "air_date"
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

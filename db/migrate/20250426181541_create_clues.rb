@@ -3,13 +3,13 @@ class CreateClues < ActiveRecord::Migration[8.0]
     create_table :clues do |t|
       t.integer :round
       t.integer :clue_value
-      t.integer :daily_double_value, optional: true
+      t.integer :daily_double_value, null: true
       t.text :category
-      t.text :comments, optional: true
+      t.text :comments, null: true
       t.text :answer
       t.text :question
       t.string :air_date
-      t.text :notes, optional: true
+      t.text :notes, null: true
 
       t.timestamps
     end

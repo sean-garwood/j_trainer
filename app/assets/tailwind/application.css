@@ -1,2 +1,5 @@
-@import "tailwindcss/preflight";
 @import "tailwindcss";
+
+@source "../../views/**/*.{erb,html}";
+@source "../../helpers/**/*.rb";
+@source "../../javascript/**/*.js";
