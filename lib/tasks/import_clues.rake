@@ -25,21 +25,16 @@ namespace :clues do
     batch_size = 1000
     batch = []
 
-    # Read the file and clean up the escaping issues
     File.open(file_path, "r:UTF-8") do |file|
-      # Read header line
       header_line = file.gets
       unless header_line
         puts "Error: File is empty"
         exit 1
       end
 
-      # Clean and parse header
       header = header_line.strip.split("\t").map(&:strip)
       puts "Columns found: #{header.join(', ')}\n"
 
-      # Expected columns from the TSV
-      # round, clue_value, daily_double_value, category, comments, answer, question, air_date, notes
       required_indices = {
         round: header.index("round") || 0,
         clue_value: header.index("clue_value") || 1,
@@ -58,10 +53,8 @@ namespace :clues do
         line_number += 1
 
         begin
-          # Clean the line: unescape the backslash-escaped quotes
+          # Unescape the backslash-escaped quotes
           cleaned_line = line.gsub('\"', '"').gsub("\\'", "'")
-
-          # Split by tabs
           fields = cleaned_line.split("\t", -1)
 
           # Extract and clean fields
@@ -70,43 +63,20 @@ namespace :clues do
           daily_double_value = fields[required_indices[:daily_double_value]]&.strip
           category = fields[required_indices[:category]]&.strip
           comments = fields[required_indices[:comments]]&.strip
-          clue_text = fields[required_indices[:answer]]&.strip  # "answer" in TSV = clue_text in DB
-          correct_response = fields[required_indices[:question]]&.strip  # "question" in TSV = correct_response in DB
+          # "answer" in TSV = clue_text in DB
+          clue_text = fields[required_indices[:answer]]&.strip
+          # "question" in TSV = correct_response in DB
+          correct_response = fields[required_indices[:question]]&.strip
           air_date = fields[required_indices[:air_date]]&.strip
           notes = fields[required_indices[:notes]]&.strip
 
           # Skip if missing required fields
-          if round.blank? || clue_value.blank? || category.blank? || clue_text.blank? || correct_response.blank? || air_date.blank?
+          if round.blank? || clue_value.blank? || category.blank? ||
+            clue_text.blank? || correct_response.blank? || air_date.blank?
             skipped_count += 1
             next
           end
 
-          # Parse round (handle string values like "Jeopardy!" -> 1, "Double Jeopardy!" -> 2, "Final Jeopardy!" -> 3)
-          # round_num = case round.downcase
-          # when /final/
-          #   3
-          # when /double/
-          #   2
-          # else
-          #   round.to_i.zero? ? 1 : round.to_i
-          # end
-
-          # Parse clue value - remove $ and commas
-          # clue_value_num = clue_value.gsub(/[\$,]/, "").to_i
-
-          # Handle zero or invalid clue values - use defaults based on round
-          # if clue_value_num.zero?
-          #   clue_value_num = case round_num
-          #   when 1
-          #     200  # Default for Jeopardy round
-          #   when 2
-          #     400  # Default for Double Jeopardy
-          #   when 3
-          #     0    # Final Jeopardy has no fixed value
-          #   end
-          # end
-
-          # Parse air date
           parsed_air_date = begin
             Date.parse(air_date)
           rescue
@@ -127,7 +97,6 @@ namespace :clues do
             updated_at: Time.current
           }
 
-          # Insert batch when it reaches batch_size
           if batch.size >= batch_size
             Clue.insert_all(batch)
             imported_count += batch.size
@@ -144,7 +113,6 @@ namespace :clues do
         end
       end
 
-      # Insert remaining batch
       if batch.any?
         Clue.insert_all(batch)
         imported_count += batch.size

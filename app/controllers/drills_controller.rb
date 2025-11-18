@@ -33,17 +33,36 @@ class DrillsController < ApplicationController
     end
   end
 
+  def end_current
+    if session[:current_drill_id].present?
+      end_drill
+    else
+      redirect_to drills_path, alert: "No active drill to end."
+    end
+  end
+
   private
 
   # OPTIMIZE: current_user.drills.build
   def find_or_create_current_drill
     if session[:current_drill_id].present?
-      Drill.find(session[:current_drill_id])
+      begin
+        Drill.find(session[:current_drill_id])
+      rescue ActiveRecord::RecordNotFound
+        # Invalidate cache if drill doesn't exist
+        Rails.logger.warn "Drill #{session[:current_drill_id]} not found. Clearing session and creating new drill."
+        session[:current_drill_id] = nil
+        create_new_drill
+      end
     else
-      drill = Drill.create!(user: current_user)
-      session[:current_drill_id] = drill.id
-      drill
+      create_new_drill
     end
+  end
+
+  def create_new_drill
+    drill = Drill.create!(user: current_user)
+    session[:current_drill_id] = drill.id
+    drill
   end
 
   def end_drill

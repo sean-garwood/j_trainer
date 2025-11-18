@@ -2,24 +2,32 @@
   <div class="mb-6 flex justify-between items-center">
     <h1 class="text-3xl font-bold">Training Session</h1>
 
-    <!-- Stats Display -->
-    <div id="drill_stats" class="bg-white rounded-lg shadow p-4 flex gap-4 text-sm">
-      <div class="text-center">
-        <div class="font-bold text-green-600"><%= @drill.correct_count %></div>
-        <div class="text-gray-600">Correct</div>
+    <div class="flex gap-4 items-center">
+      <!-- Stats Display -->
+      <div id="drill_stats" class="bg-white rounded-lg shadow p-4 flex gap-4 text-sm">
+        <div class="text-center">
+          <div class="font-bold text-green-600"><%= @drill.correct_count %></div>
+          <div class="text-gray-600">Correct</div>
+        </div>
+        <div class="text-center">
+          <div class="font-bold text-red-600"><%= @drill.incorrect_count %></div>
+          <div class="text-gray-600">Incorrect</div>
+        </div>
+        <div class="text-center">
+          <div class="font-bold text-gray-600"><%= @drill.pass_count %></div>
+          <div class="text-gray-600">Passed</div>
+        </div>
+        <div class="text-center">
+          <div class="font-bold text-blue-600"><%= @drill.clues_seen_count %></div>
+          <div class="text-gray-600">Seen</div>
+        </div>
       </div>
-      <div class="text-center">
-        <div class="font-bold text-red-600"><%= @drill.incorrect_count %></div>
-        <div class="text-gray-600">Incorrect</div>
-      </div>
-      <div class="text-center">
-        <div class="font-bold text-gray-600"><%= @drill.pass_count %></div>
-        <div class="text-gray-600">Passed</div>
-      </div>
-      <div class="text-center">
-        <div class="font-bold text-blue-600"><%= @drill.clues_seen_count %></div>
-        <div class="text-gray-600">Seen</div>
-      </div>
+
+      <!-- End Drill Button -->
+      <%= button_to "End Drill", end_drills_path,
+                    method: :post,
+                    form: { data: { turbo_confirm: "Are you sure you want to end this drill?" } },
+                    class: "px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors" %>
     </div>
   </div>
 

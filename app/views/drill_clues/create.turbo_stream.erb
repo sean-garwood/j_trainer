@@ -4,8 +4,6 @@
              clue: @clue,
              drill_clue: @drill_clue %>
 <% end %>
-
-<%# Update stats in real-time %>
 <%= turbo_stream.update "drill_stats" do %>
   <div class="bg-white rounded-lg shadow p-4 flex gap-4 text-sm">
     <div class="text-center">
