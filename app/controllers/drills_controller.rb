@@ -21,6 +21,8 @@ class DrillsController < ApplicationController
 
   def train
     @drill = find_or_create_current_drill
+    # HACK: Fallback in case of session issues
+    @drill ||= Drill.create!(user: current_user)
     @clue = @drill.fetch_clue
 
     if @clue.nil?
