@@ -6,12 +6,6 @@ class DrillsController < ApplicationController
     @pagy, @drills = pagy(@drills.order(created_at: :desc), limit: 10)
   end
 
-  def new
-  end
-
-  def create
-  end
-
   def show
     @drill = Drill.find(params[:id])
   end
@@ -42,37 +36,35 @@ class DrillsController < ApplicationController
   end
 
   private
-
-  # OPTIMIZE: current_user.drills.build
-  def find_or_create_current_drill
-    if session[:current_drill_id].present?
-      begin
-        Drill.find(session[:current_drill_id])
-      rescue ActiveRecord::RecordNotFound
-        # Invalidate cache if drill doesn't exist
-        Rails.logger.warn "Drill #{session[:current_drill_id]} not found. Clearing session and creating new drill."
-        session[:current_drill_id] = nil
+    def find_or_create_current_drill
+      if session[:current_drill_id].present?
+        begin
+          Drill.find(session[:current_drill_id])
+        rescue ActiveRecord::RecordNotFound
+          # Invalidate cache if drill doesn't exist
+          Rails.logger.warn "Drill #{session[:current_drill_id]} not found. Clearing session and creating new drill."
+          session[:current_drill_id] = nil
+          create_new_drill
+        end
+      else
         create_new_drill
       end
-    else
-      create_new_drill
     end
-  end
 
-  def create_new_drill
-    drill = Drill.create!(user: current_user)
-    session[:current_drill_id] = drill.id
-    drill
-  end
+    def create_new_drill
+      drill = Drill.create!(user: current_user)
+      session[:current_drill_id] = drill.id
+      drill
+    end
 
-  def end_drill
-    current_drill = Drill.find(session[:current_drill_id])
-    current_drill.update(ended_at: Time.current)
-    session[:current_drill_id] = nil
-    redirect_to drill_path(current_drill), notice: "Drill completed! Great work!"
-  end
+    def end_drill
+      current_drill = Drill.find(session[:current_drill_id])
+      current_drill.update(ended_at: Time.current)
+      session[:current_drill_id] = nil
+      redirect_to drill_path(current_drill), notice: "Drill completed! Great work!"
+    end
 
-  def drill_params
-    params.expect(drill: [ :id ])
-  end
+    def drill_params
+      params.expect(drill: [ :id ])
+    end
 end

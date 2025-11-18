@@ -14,17 +14,6 @@ class DrillClue < ApplicationRecord
   before_save :set_result
   after_commit :update_drill_counts
 
-  def correct?
-    result == "correct"
-  end
-
-  def incorrect?
-    result == "incorrect"
-  end
-
-  def passed?
-    result == "pass"
-  end
 
   private
     def set_result
@@ -44,11 +33,11 @@ class DrillClue < ApplicationRecord
 
       # Extract answer from "What is X?" format if present
       # TODO: accept last name only for person answers (except Jones, etc.)
-      answer_text = clue.correct_response.gsub(/\A(what|who|where|when|why) is\s+/i, "").gsub(/\??\z/, "").strip
+      answer_text = strip_pronouns(clue.correct_response)
 
       # Normalize both strings: downcase, remove punctuation, trim
-      normalized_response = response.downcase.gsub(/[^a-z0-9\s]/, "").strip
-      normalized_answer = answer_text.downcase.gsub(/[^a-z0-9\s]/, "").strip
+      normalized_response = normalize_text(response)
+      normalized_answer = normalize_text(answer_text)
 
       # Check if response contains the key answer terms (bidirectional)
       normalized_answer.include?(normalized_response) ||
@@ -56,7 +45,9 @@ class DrillClue < ApplicationRecord
     end
 
     def response_indicates_pass?
-      response.blank? || response.strip.match?(/\Ap(?:ass)?\z/i) || no_buzz?
+      response.blank? ||
+      normalize_text(response).match?(/\Ap(?:ass)?\z/i) ||
+      no_buzz?
     end
 
     def no_buzz?
@@ -65,5 +56,14 @@ class DrillClue < ApplicationRecord
 
     def update_drill_counts
       drill.update_counts!
+    end
+
+    # TODO: move to module
+    def normalize_text(text)
+      text.downcase.gsub(/[^a-z0-9\s]/, "").strip
+    end
+
+    def strip_pronouns(answer)
+      answer.downcase.gsub(/\A(what|who|where|when|why) is\s+/, "").gsub(/\??\z/, "").strip
     end
 end

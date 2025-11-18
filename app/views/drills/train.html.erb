@@ -1,40 +1,9 @@
 <div class="max-w-4xl mx-auto mt-8 p-6">
-  <div class="mb-6 flex justify-between items-center">
-    <h1 class="text-3xl font-bold">Training Session</h1>
-
-    <div class="flex gap-4 items-center">
-      <!-- Stats Display -->
-      <div id="drill_stats" class="bg-white rounded-lg shadow p-4 flex gap-4 text-sm">
-        <div class="text-center">
-          <div class="font-bold text-green-600"><%= @drill.correct_count %></div>
-          <div class="text-gray-600">Correct</div>
-        </div>
-        <div class="text-center">
-          <div class="font-bold text-red-600"><%= @drill.incorrect_count %></div>
-          <div class="text-gray-600">Incorrect</div>
-        </div>
-        <div class="text-center">
-          <div class="font-bold text-gray-600"><%= @drill.pass_count %></div>
-          <div class="text-gray-600">Passed</div>
-        </div>
-        <div class="text-center">
-          <div class="font-bold text-blue-600"><%= @drill.clues_seen_count %></div>
-          <div class="text-gray-600">Seen</div>
-        </div>
-      </div>
-
-      <!-- End Drill Button -->
-      <%= button_to "End Drill", end_drills_path,
-                    method: :post,
-                    form: { data: { turbo_confirm: "Are you sure you want to end this drill?" } },
-                    class: "px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors" %>
-    </div>
-  </div>
-
   <%= turbo_frame_tag "drill_clue_frame" do %>
     <% if @clue.present? %>
       <%= render "clue_form", drill: @drill, clue: @clue, drill_clue: @drill_clue %>
     <% else %>
+      <%# TODO: This is lame. batch of ~60 and offer reload instead? %>
       <div class="text-center py-12">
         <p class="text-xl text-gray-600">No more clues available!</p>
         <%= link_to "View Results", drill_path(@drill),
@@ -42,12 +11,14 @@
       </div>
     <% end %>
   <% end %>
+  <div class= "mt-6 flex justify-center items-center">
+    <div class="flex gap-4 items-center">
+      <%= render "stats", drill: @drill %>
+      <!-- End Drill Button -->
+      <%= button_to "End Drill", end_drills_path,
+                    method: :post,
+                    form: { data: { turbo_confirm: "Are you sure you want to end this drill?" } },
+                    class: "px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors" %>
+    </div>
+  </div>
 </div>
-
-<!-- Inject game settings for JavaScript -->
-<script id="game-settings-data" type="application/json">
-  <%= raw({
-    max_response_time: JTrainer::MAX_RESPONSE_TIME,
-    max_buzz_time: JTrainer::MAX_BUZZ_TIME
-  }.to_json) %>
-</script>

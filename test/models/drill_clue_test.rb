@@ -37,7 +37,7 @@ class DrillClueTest < ActiveSupport::TestCase
     )
     drill_clue.save
 
-    assert drill_clue.passed?, "Blank response should be marked as pass"
+    assert drill_clue.pass?, "Blank response should be marked as pass"
   end
 
   test "correctly identifies pass from 'pass' response" do
@@ -49,7 +49,7 @@ class DrillClueTest < ActiveSupport::TestCase
     )
     drill_clue.save
 
-    assert drill_clue.passed?, "'pass' response should be marked as pass"
+    assert drill_clue.pass?, "'pass' response should be marked as pass"
   end
 
   test "correctly identifies pass from 'p' response" do
@@ -61,7 +61,7 @@ class DrillClueTest < ActiveSupport::TestCase
     )
     drill_clue.save
 
-    assert drill_clue.passed?, "'p' response should be marked as pass"
+    assert drill_clue.pass?, "'p' response should be marked as pass"
   end
 
   test "correctly identifies pass from timeout" do
@@ -73,7 +73,7 @@ class DrillClueTest < ActiveSupport::TestCase
     )
     drill_clue.save
 
-    assert drill_clue.passed?, "Timeout should be marked as pass"
+    assert drill_clue.pass?, "Timeout should be marked as pass"
   end
 
   test "response matching is case insensitive" do

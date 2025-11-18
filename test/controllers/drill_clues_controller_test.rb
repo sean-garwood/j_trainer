@@ -47,7 +47,7 @@ class DrillCluesControllerTest < ActionDispatch::IntegrationTest
     }, as: :turbo_stream
 
     drill_clue = DrillClue.last
-    assert drill_clue.passed?, "Should be marked as pass"
+    assert drill_clue.pass?, "Should be marked as pass"
   end
 
   test "should return turbo_stream response" do

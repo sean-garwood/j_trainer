@@ -25,25 +25,9 @@ three:
   air_date: 2025-04-29
 
 old:
-  round: 1
   clue_value: 100
-  category: CATEGORY
-  clue_text: MyText
-  correct_response: MyText
-  air_date: 1984-12-29
+  air_date: 2001-11-25
 
-invalid_round:
-  round: 4
-  clue_value: 100
-  category: CATEGORY
-  clue_text: MyText
-  correct_response: MyText
-  air_date: 1984-12-29
-
-invalid_clue_value:
-  round: 2
-  clue_value: 4000
-  category: CATEGORY
-  clue_text: MyText
-  correct_response: MyText
-  air_date: 2025-04-29
+new:
+  clue_value: 200
+  air_date: 2001-11-26

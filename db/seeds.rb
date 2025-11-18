@@ -9,7 +9,7 @@
 #   end
 
 
-user = User.find_or_create_by!(email_address: "foo@bar.com") do |u|
+User.find_or_create_by!(email_address: "foo@bar.com") do |u|
   u.password = "password"
 end
 puts "Added/found sample user for #{Rails.env}"

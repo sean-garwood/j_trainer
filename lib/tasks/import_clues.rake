@@ -1,5 +1,5 @@
 namespace :clues do
-  # TODO: only grab clues with specific category names that match the subjects
+  # TODO: tags/categories filtering
   # that we want to track stats for.
   # e.g. "History", but not "European History"
   # This ensures that we are properly tagging clues for user stats.
@@ -7,7 +7,7 @@ namespace :clues do
   desc "Import clues from TSV file (db/data/combined_season1-40.tsv)"
   task import: :environment do
     require "csv"
-
+    include ClueValueHelper
     file_path = Rails.root.join("db/data/combined_season1-40.tsv")
 
     unless File.exist?(file_path)
@@ -26,27 +26,7 @@ namespace :clues do
     batch = []
 
     File.open(file_path, "r:UTF-8") do |file|
-      header_line = file.gets
-      unless header_line
-        puts "Error: File is empty"
-        exit 1
-      end
-
-      header = header_line.strip.split("\t").map(&:strip)
-      puts "Columns found: #{header.join(', ')}\n"
-
-      required_indices = {
-        round: header.index("round") || 0,
-        clue_value: header.index("clue_value") || 1,
-        daily_double_value: header.index("daily_double_value") || 2,
-        category: header.index("category") || 3,
-        comments: header.index("comments") || 4,
-        answer: header.index("answer") || 5,  # Maps to clue_text
-        question: header.index("question") || 6,  # Maps to correct_response
-        air_date: header.index("air_date") || 7,
-        notes: header.index("notes") || 8
-      }
-
+      required_indices = get_col_indices(file)
       line_number = 1
 
       file.each_line do |line|
@@ -86,6 +66,8 @@ namespace :clues do
           batch << {
             round: round.to_i,
             clue_value: clue_value.to_i,
+            normalized_clue_value:
+              ClueValueHelper.normalize_clue_value(clue_value.to_i, air_date),
             daily_double_value: daily_double_value.to_i,
             category: category,
             comments: comments,
@@ -119,14 +101,14 @@ namespace :clues do
       end
     end
 
-    puts "\n\n" + "=" * 50
+    puts "\n\n" + line_break
     puts "Import completed!"
-    puts "=" * 50
+    line_break
     puts "Successfully imported: #{imported_count} clues"
     puts "Skipped (missing data): #{skipped_count} rows"
     puts "Errors encountered: #{error_count} rows"
     puts "Total clues in database: #{Clue.count}"
-    puts "=" * 50
+    line_break
   end
 
   desc "Clear all clues from the database"
@@ -145,12 +127,17 @@ namespace :clues do
   desc "Show import statistics"
   task stats: :environment do
     total = Clue.count
-    puts "=" * 50
-    puts "Clue Statistics"
-    puts "=" * 50
-    puts "Total clues: #{total}"
+    aggregate_clues_by = ->(col, should_order = false) do
+        if should_order
+          Clue.group(col).order(col).count
+        else
+          Clue.group(col).count
+        end
+      end
+    print_header
+    show_total_clues_info
     puts "\nBy Round:"
-    Clue.group(:round).count.sort.each do |round, count|
+    aggregate_clues_by.call(:round).sort.each do |round, count|
       round_name = case round
       when 1
         "Jeopardy!"
@@ -164,16 +151,73 @@ namespace :clues do
       puts "  #{round_name}: #{count} (#{(count.to_f / total * 100).round(1)}%)"
     end
     puts "\nBy Clue Value:"
-    Clue.group(:clue_value).order(:clue_value).count.each do |value, count|
+    aggregate_clues_by.call(:clue_value, true).each do |value, count|
       puts "  $#{value}: #{count}"
     end
-    puts "\nDate Range:"
-    puts "  Earliest: #{Clue.minimum(:air_date)}"
-    puts "  Latest: #{Clue.maximum(:air_date)}"
-    puts "\nTop 10 Categories:"
-    Clue.group(:category).count.sort_by { |_, count| -count }.first(10).each do |category, count|
-      puts "  #{category}: #{count}"
+    puts "\nBy Normalized Clue Value:"
+    aggregate_clues_by.call(:normalized_clue_value, true).each do |value, count|
+      puts "  $#{value}: #{count}"
     end
-    puts "=" * 50
+    show_date_range
+    top_categories_to_show = 100
+    puts "\nTop #{top_categories_to_show} Categories:"
+    aggregate_clues_by.call(:category).sort_by { |_, count| -count }
+      .first(top_categories_to_show).each do |category, count|
+        puts "  #{category}: #{count}"
+    end
+    line_break
   end
+
+  private
+    def get_col_indices(file)
+        header_line = file.gets
+        unless header_line
+          puts "Error: File is empty"
+          exit 1
+        end
+
+        header = header_line.strip.split("\t").map(&:strip)
+        puts "Columns found: #{header.join(', ')}\n"
+
+        {
+          round: header.index("round") || 0,
+          clue_value: header.index("clue_value") || 1,
+          daily_double_value: header.index("daily_double_value") || 2,
+          category: header.index("category") || 3,
+          comments: header.index("comments") || 4,
+          answer: header.index("answer") || 5,  # Maps to clue_text
+          question: header.index("question") || 6,  # Maps to correct_response
+          air_date: header.index("air_date") || 7,
+          notes: header.index("notes") || 8
+        }
+    end
+
+    def line_break(width = 80)
+      "#{'=' * width}"
+    end
+
+    def show_date_range
+      date_range = <<~DATE_RANGE
+      Date Range:
+        Earliest: #{Clue.minimum(:air_date)}
+        Latest: #{Clue.maximum(:air_date)}
+      DATE_RANGE
+      puts date_range
+    end
+
+    def show_total_clues_info(total = Clue.count)
+      total_clues_info = <<~TOTAL_CLUES_INFO
+      Total clues: #{total}
+      #{line_break}
+      TOTAL_CLUES_INFO
+      puts total_clues_info
+    end
+
+    def print_header
+      header = <<~HEADER
+      #{line_break}
+      Clue Statistics
+      HEADER
+      puts header
+    end
 end
