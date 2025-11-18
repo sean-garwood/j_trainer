@@ -76,3 +76,5 @@ gem "cancancan"
 gem "pagy", "~> 9.0"
 
 gem "rubocop", "~> 1.81"
+
+gem "csv", "~> 3.3"

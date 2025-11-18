@@ -8,48 +8,22 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-puts "Seeding clues."
-
-sample_clues = [
-  {
-    round: 1,
-    clue_value: 200,
-    category: "HISTORY",
-    clue_text: "This document, signed in 1215, limited the power of the English monarch",
-    correct_response: "What is the Magna Carta?",
-    air_date: "2022-01-15"
-  },
-  {
-    round: 2,
-    clue_value: 400,
-    category: "SCIENCE",
-    clue_text: "This element with atomic number 79 has the chemical symbol Au",
-    correct_response: "What is Gold?",
-    air_date: "2022-01-15"
-  }
-]
 
 user = User.find_or_create_by!(email_address: "foo@bar.com") do |u|
   u.password = "password"
 end
 puts "Added/found sample user for #{Rails.env}"
 
-Clue.insert_all(sample_clues) if Clue.count.zero?
-puts "Added #{sample_clues.size} sample clues for #{Rails.env}"
+# Import clues if none exist.
 
-drill = Drill.find_or_create_by!(user: user) do |d|
-  d.started_at = Time.now
-  d.ended_at = Time.now + 5.minutes
-  d.correct_count = 0
-  d.incorrect_count = 0
-  d.pass_count = 0
+if Clue.count.zero?
+  puts "No clues found. Running clues:import task..."
+  begin
+    Rake::Task["clues:import"].invoke
+    puts "Clue import completed."
+  rescue => e
+    puts "Error during clue import: #{e.message}"
+  end
+else
+  puts "#{Clue.count} clues already exist. Skipping clues import."
 end
-puts "Added sample drill for #{Rails.env}"
-
-DrillClue.find_or_create_by!(drill: drill, clue: Clue.first) do |dc|
-  dc.response_time = 1.5
-  dc.response = "What is the Magna Carta?"
-end
-puts "Added sample drill clue for #{Rails.env}"
-
-puts "Seeding completed."
