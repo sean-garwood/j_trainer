@@ -54,6 +54,7 @@ group :development, :test do
 
   gem "guard"
   gem "guard-minitest"
+  gem "bullet", "~> 8.1"
 end
 
 group :development do
