@@ -13,7 +13,8 @@ class Drill < ApplicationRecord
       seen: clues_seen_count,
       # TODO: add columns to the drills table to persist these values
       accuracy: accuracy,
-      coryat_score: coryat_score
+      coryat_score: coryat_score,
+      max_possible_score: max_possible_score
     }
   end
 
@@ -58,6 +59,10 @@ class Drill < ApplicationRecord
       end
     end
     score
+  end
+
+  def max_possible_score
+    drill_clues.includes(:clue).sum(:clue_value)
   end
 
   private

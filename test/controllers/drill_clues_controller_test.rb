@@ -93,7 +93,7 @@ class DrillCluesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     # Response should contain the next clue form
-    assert_match /drill_clue_frame/, response.body
+    assert_match (/drill_clue_frame/), response.body
   end
 
   private
