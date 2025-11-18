@@ -57,6 +57,7 @@ class Drill < ApplicationRecord
 
     # TODO: session storage/cookie
     def unseen_clue_ids
-      Clue.where.not(id: drill_clues.select(:clue_id)).pluck(:id)
+      seen_ids = drill_clues.pluck(:clue_id)
+      Clue.where.not(id: seen_ids).pluck(:id)
     end
 end

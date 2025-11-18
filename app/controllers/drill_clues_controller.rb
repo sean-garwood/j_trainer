@@ -5,6 +5,9 @@ class DrillCluesController < ApplicationController
     @drill_clue = @drill.drill_clues.build(drill_clue_params)
 
     if @drill_clue.save
+      # Reload drill to ensure the drill_clues association is fresh
+      @drill.reload
+
       # Fetch next clue
       @clue = @drill.fetch_clue
 

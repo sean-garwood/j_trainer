@@ -1,8 +1,10 @@
 <%= turbo_stream.replace "drill_clue_frame" do %>
-  <%= render "drills/clue_form",
-             drill: @drill,
-             clue: @clue,
-             drill_clue: @drill_clue %>
+  <%= turbo_frame_tag "drill_clue_frame" do %>
+    <%= render "drills/clue_form",
+               drill: @drill,
+               clue: @clue,
+               drill_clue: @drill_clue %>
+  <% end %>
 <% end %>
 <%= turbo_stream.update "drill_stats" do %>
   <div class="bg-white rounded-lg shadow p-4 flex gap-4 text-sm">
