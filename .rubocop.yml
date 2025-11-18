@@ -6,3 +6,14 @@ inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 # # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
 # Layout/SpaceInsideArrayLiteralBrackets:
 #   Enabled: false
+Bundler/DuplicatedGem:
+  Enabled: true
+
+Layout/LineLength:
+  Max: 80
+
+Metrics/MethodLength:
+  Max: 10
+
+Metrics/CyclomaticComplexity:
+  Max: 6
