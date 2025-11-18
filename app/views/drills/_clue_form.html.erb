@@ -1,30 +1,7 @@
 <%# TODO: Partial this up %>
 <%#           Find some kind of auto formatting solution %>
 <div class="bg-white rounded-lg shadow-lg p-8">
-  <!-- Clue Display -->
-  <div class="mb-8 text-center">
-    <div class="mb-4">
-      <span class="inline-block px-4 py-1 bg-blue-100
-                   text-blue-800 rounded-full text-sm font-semibold">
-        <%= (clue.round == 1 ? "" : clue.round == 2 ? "Double " : "Final ")  +
-        "Jeopardy!"%>
-      </span>
-    </div>
-
-    <h2 class="text-2xl font-bold text-indigo-900 mb-2">
-      <%= clue.category %>
-    </h2>
-    <div class="text-4xl font-bold text-green-600 mb-6">
-      $<%= number_with_delimiter(clue.clue_value) %>
-      </div>
-
-    <!-- Clue Text -->
-    <div class="bg-blue-900 text-white text-xl p-6 rounded-lg min-h-[120px]
-                flex items-center justify-center">
-      <%= clue.clue_text %>
-    </div>
-  </div>
-
+  <%= render partial: "drills/clue", locals: { clue: clue } %>
   <!-- Response Form -->
   <%= form_with model: drill_clue,
                 url: drill_drill_clues_path(drill),
@@ -34,12 +11,10 @@
                   action: "turbo:submit-start->response-timer#beforeSubmit"
                 },
                 class: "space-y-4" do |form| %>
-
     <%= form.hidden_field :clue_id, value: clue.id %>
     <%= form.hidden_field :response_time,
                           value: 0,
                           data: { response_timer_target: "timeField" } %>
-
     <!-- User Response Input -->
     <div>
       <%= form.label :response, "What is...",
@@ -55,7 +30,6 @@
                           rounded-lg focus:border-indigo-500 focus:ring-2
                           focus:ring-indigo-200" %>
     </div>
-
     <!-- Timer Display -->
     <div class="text-center">
       <div data-response-timer-target="countdown"
@@ -63,7 +37,6 @@
         Ready...
       </div>
     </div>
-
     <!-- Submit Buttons -->
     <div class="flex gap-3">
       <%= form.submit "Submit Answer",
@@ -71,7 +44,6 @@
                       font-semibold rounded-lg hover:bg-indigo-700
                       focus:outline-none focus:ring-2 focus:ring-indigo-500
                       focus:ring-offset-2" %>
-
       <%= link_to "Pass",
                   drill_drill_clues_path(drill, drill_clue: { clue_id: clue.id, response: "pass", response_time: 0 }),
                   data: {
