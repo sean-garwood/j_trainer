@@ -3,19 +3,38 @@
   <h2><%= @drill.created_at %></h2>
   <div class="mt-4">
     <h3 class="font-semibold text-2xl">Statistics</h3>
-    <ul class="list-disc list-inside">
+    <ul class="list-none list-inside">
       <% stats = @drill.stats %>
       <li>Correct Answers: <%= stats[:correct] %></li>
       <li>Incorrect Answers: <%= stats[:incorrect] %></li>
       <li>Passes: <%= stats[:pass] %></li>
       <li>Clues Seen: <%= stats[:seen] %></li>
       <li>Accuracy: <%= stats[:accuracy] %></li>
+      <li>
+        Coryat Score: <%= format_currency(stats[:coryat_score]) %>
+      </li>
+      <li>
+        Sum of Clue Values: <%= format_currency(stats[:max_possible_score]) %>
+      </li>
     </ul>
     <div>
       <h3 class="font-semibold text-2xl mt-4">Clues</h3>
       <div class="space-y-6">
         <% @drill.drill_clues.each do |clue| %>
           <div class="p-4 border rounded-lg">
+            <h4 class="font-semibold text-xl"><%=
+            case clue.clue.round
+            when 1
+              ""
+            when 2
+              "Double "
+            when 3
+              "Final "
+            end %>Jeopardy!</h4>
+            <h4 class="font-semibold text-xl"><%= clue.clue.category %></h4>
+            <h4 class="font-semibold text-xl">
+              <%= format_currency(clue.clue.clue_value) %>
+            </h4>
             <h4 class="font-semibold text-xl"><%= clue.clue.clue_text %></h4>
             <p>Your Answer: <span class="<%= clue.correct? ? 'text-green-600' : 'text-red-600' %>"><%= clue.response %></span></p>
             <% unless clue.correct? %>
@@ -23,6 +42,7 @@
             <% end %>
           </div>
         <% end %>
+      </div>
     </div>
   </div>
 </div>

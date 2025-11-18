@@ -38,10 +38,12 @@ class DrillClue < ApplicationRecord
       end
     end
 
+    # TODO: improve matching logic
     def response_matches_correct_response?
       return false if response.blank?
 
       # Extract answer from "What is X?" format if present
+      # TODO: accept last name only for person answers (except Jones, etc.)
       answer_text = clue.correct_response.gsub(/\A(what|who|where|when|why) is\s+/i, "").gsub(/\??\z/, "").strip
 
       # Normalize both strings: downcase, remove punctuation, trim

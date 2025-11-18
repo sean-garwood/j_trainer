@@ -9,14 +9,17 @@ This app is under construction. It doesn't really have any features.
 
 ## Roadmap
 
-1. Get some clues!
+1. Get some clues! ✅
    - No decent APIs seem to exist. I found a pretty nice static .tsv but need to
      filter/format.
-1. Serve random clues, accept user input
-   - Leave it to user to judge as correct/incorrect/pass
+1. Serve random clues, accept user input ✅
+   - ~~Leave it to user to judge as correct/incorrect/pass~~
    - Persist results to database
-1. Filter clues by
-   - Category
+1. Implement buzzer
+   - Time responses, submit when time is up
+   - Jeopardy-style bar to count down buzz-in time
+1. Rich stats: filter results by
+   - Categories
    - Dollar amount
    - Round
 1. Stats view

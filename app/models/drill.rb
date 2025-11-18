@@ -11,7 +11,9 @@ class Drill < ApplicationRecord
       incorrect: incorrect_count,
       pass: pass_count,
       seen: clues_seen_count,
-      accuracy: accuracy
+      # TODO: add columns to the drills table to persist these values
+      accuracy: accuracy,
+      coryat_score: coryat_score
     }
   end
 
@@ -36,15 +38,7 @@ class Drill < ApplicationRecord
     incorrect = drill_clues.incorrect.count
     passed = drill_clues.pass.count
 
-    Rails.logger.info "
-    Updating drill counts:
-      total=#{total},
-      correct=#{correct},
-      incorrect=#{incorrect},
-      pass=#{passed}
-    "
-
-    self.update_columns(
+    update_columns(
       clues_seen_count: total,
       correct_count: correct,
       incorrect_count: incorrect,
@@ -53,11 +47,26 @@ class Drill < ApplicationRecord
     )
   end
 
+  def coryat_score
+    score = 0
+    drill_clues.includes(:clue).find_each do |dc|
+      case dc.result
+      when "correct"
+        score += dc.clue.clue_value
+      when "incorrect"
+        score -= dc.clue.clue_value
+      end
+    end
+    score
+  end
+
   private
 
-    # TODO: session storage/cookie
+    # OPTIMIZE: before hook to cache seen IDs?
+    # then pop/unshift as drill progresses.
     def unseen_clue_ids
       seen_ids = drill_clues.pluck(:clue_id)
-      Clue.where.not(id: seen_ids).pluck(:id)
+      Clue.where.not(id: seen_ids, round: 3)
+        .pluck(:id) # exclude Final Jeopardy clues
     end
 end
