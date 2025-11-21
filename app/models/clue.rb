@@ -8,13 +8,6 @@ class Clue < ApplicationRecord
   # The lack of validations is due to the fact that the data is write-once and
   # clean as hell.
 
-  def success_rate
-    total = drill_clues.count
-    return nil if total.zero?
-
-    drill_clues.correct.count.to_f / total
-  end
-
   def times_seen
     drills.count
   end

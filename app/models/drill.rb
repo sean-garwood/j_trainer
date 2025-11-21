@@ -49,10 +49,12 @@ class Drill < ApplicationRecord
   end
 
   def coryat_score
-    drill_clues.includes(:clue).each_with_object(0) do |dc, score|
+    score = 0
+    drill_clues.includes(:clue).find_each do |dc|
       score = score.send(
-        dc.correct ? :+ : :-, dc.clue.normalized_clue_value)
+        dc.result == "correct" ? :+ : :-, dc.clue.normalized_clue_value)
     end
+    score
   end
 
   def max_possible_score

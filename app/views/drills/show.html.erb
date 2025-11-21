@@ -33,7 +33,7 @@
             end %>Jeopardy!</h4>
             <h4 class="font-semibold text-xl"><%= clue.clue.category %></h4>
             <h4 class="font-semibold text-xl">
-              <%= format_currency(clue.clue.clue_value) %>
+              <%= format_currency(clue.clue.normalized_clue_value) %>
             </h4>
             <h4 class="font-semibold text-xl"><%= clue.clue.clue_text %></h4>
             <p>Your Answer: <span class="<%= clue.correct? ? 'text-green-600' : 'text-red-600' %>"><%= clue.response %></span></p>

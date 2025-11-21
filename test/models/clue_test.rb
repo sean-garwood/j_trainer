@@ -19,10 +19,6 @@ class ClueTest < ActiveSupport::TestCase
     assert_equal 1, @clue_one.times_seen
   end
 
-  test "responds to #success_rate" do
-    assert_respond_to @clue_one, :success_rate
-  end
-
   test "responds to drill_clues" do
     assert_respond_to @clue_one, :drill_clues
   end
