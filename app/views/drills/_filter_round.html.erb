@@ -1,0 +1,17 @@
+<div class="border-b pb-6">
+  <h2 class="text-xl font-semibold text-gray-800 mb-4">Game Round</h2>
+  <div class="space-y-2">
+    <label class="flex items-center">
+      <%= form.radio_button :round, '', checked: true, class: "mr-2" %>
+      <span class="text-gray-700">Both Rounds</span>
+    </label>
+    <label class="flex items-center">
+      <%= form.radio_button :round, 1, class: "mr-2" %>
+      <span class="text-gray-700">Jeopardy! (Round 1)</span>
+    </label>
+    <label class="flex items-center">
+      <%= form.radio_button :round, 2, class: "mr-2" %>
+      <span class="text-gray-700">Double Jeopardy! (Round 2)</span>
+    </label>
+  </div>
+</div>

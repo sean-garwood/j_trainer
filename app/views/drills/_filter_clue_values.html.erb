@@ -1,0 +1,12 @@
+<div class="border-b pb-6">
+  <h2 class="text-xl font-semibold text-gray-800 mb-4">Clue Values</h2>
+  <p class="text-sm text-gray-600 mb-4">Select specific values (leave all unchecked for all values)</p>
+  <div class="grid grid-cols-3 gap-3">
+    <% ALL_CLUE_VALUES.each do |value| %>
+      <label class="flex items-center">
+        <%= check_box_tag 'clue_values[]', value, false, class: "mr-2" %>
+        <span class="text-gray-700"><%= number_to_currency(value, precision: 0) %></span>
+      </label>
+    <% end %>
+  </div>
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_19_110412) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_21_212948) do
   create_table "clues", force: :cascade do |t|
     t.integer "round"
     t.integer "clue_value"
@@ -48,6 +48,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_19_110412) do
     t.datetime "ended_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.json "filters", default: {}
     t.index ["user_id"], name: "index_drills_on_user_id"
   end
 

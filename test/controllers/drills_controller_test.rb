@@ -38,7 +38,7 @@ class DrillsControllerTest < ActionDispatch::IntegrationTest
 
   test "ends current drill successfully" do
     # Start a training session to create a current drill
-    get train_drills_path
+    post start_drills_path
     drill_id = session[:current_drill_id]
     assert_not_nil drill_id, "Expected a drill to be created"
 
@@ -77,7 +77,7 @@ class DrillsControllerTest < ActionDispatch::IntegrationTest
 
   test "end drill shows completion notice" do
     # Start a training session
-    get train_drills_path
+    post start_drills_path
     drill_id = session[:current_drill_id]
 
     # End the drill
@@ -90,21 +90,26 @@ class DrillsControllerTest < ActionDispatch::IntegrationTest
     assert_select "div", text: /Drill completed/i
   end
 
-  test "invalidates cache when cached drill no longer exists" do
-    # Manually set a non-existent drill_id in session
-    non_existent_id = 999_999
-    session[:current_drill_id] = non_existent_id
-
-    # Request train page - should handle missing drill gracefully
+  test "train action shows filter configuration page" do
+    # Request train page - should show filter configuration
     get train_drills_path
     assert_response :success
 
-    # Verify that a new drill was created
-    new_drill_id = session[:current_drill_id]
-    assert_not_nil new_drill_id, "Expected a new drill to be created"
-    assert_not_equal non_existent_id, new_drill_id, "Expected session to be updated with new drill"
+    # Verify no drill was created yet (train just shows the form)
+    assert_nil session[:current_drill_id], "Expected no drill to be created yet"
+  end
 
-    # Verify the new drill exists
-    assert Drill.exists?(new_drill_id), "Expected new drill to exist in database"
+  test "start action creates drill with filters" do
+    # Start a drill with filters
+    post start_drills_path, params: { round: 1, clue_values: [ 200, 400 ] }
+
+    # Verify drill was created
+    drill_id = session[:current_drill_id]
+    assert_not_nil drill_id, "Expected a drill to be created"
+
+    # Verify filters were saved
+    drill = Drill.find(drill_id)
+    assert_equal "1", drill.filters["round"]
+    assert_equal [ 200, 400 ], drill.filters["clue_values"]
   end
 end

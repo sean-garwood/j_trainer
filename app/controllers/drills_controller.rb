@@ -14,9 +14,24 @@ class DrillsController < ApplicationController
   end
 
   def train
-    @drill = find_or_create_current_drill
+    # GET /drills/train - Show filter configuration page
+    # No drill created yet
+  end
+
+  def start
+    # POST /drills/start - Create drill with filters and begin training
+    @drill = create_new_drill_with_filters
     @clue = @drill.fetch_clue
+
+    if @clue.nil?
+      # No clues match the filters
+      session[:current_drill_id] = nil
+      redirect_to train_drills_path, alert: "No clues found matching your filters. Please adjust and try again."
+      return
+    end
+
     @drill_clue = DrillClue.new(drill: @drill, clue: @clue)
+    render :training # New view for the actual training interface
   end
 
   def end_current
@@ -69,6 +84,24 @@ class DrillsController < ApplicationController
       @drill.update(ended_at: Time.current)
       last_clue&.destroy if last_clue.response.blank?
       redirect_to drill_path(@drill), notice: "Drill completed! Great work!"
+    end
+
+    def create_new_drill_with_filters
+      @drill = Drill.create!(
+        user: current_user,
+        filters: filter_params.to_h
+      )
+      session[:current_drill_id] = @drill.id
+      @drill
+    end
+
+    def filter_params
+      permitted = params.permit(:round, :date_after, :date_before, clue_values: [])
+
+      # Validate and filter clue_values to only include valid normalized values
+      permitted[:clue_values] = permitted[:clue_values].map(&:to_i) & ALL_CLUE_VALUES if permitted[:clue_values].present?
+
+      permitted
     end
 
     def drill_params

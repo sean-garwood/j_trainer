@@ -26,12 +26,28 @@ class Drill < ApplicationRecord
     "#{(correct_count.to_f / clues_seen_count * 100).round(2)}%"
   end
 
+  def filtered_clues
+    scope = Clue.where.not(round: 3) # Exclude Final Jeopardy
+
+    # Apply round filter
+    scope = scope.where(round: filters["round"]) if filters["round"].present?
+
+    # Apply clue values filter (array of specific values)
+    scope = scope.where(normalized_clue_value: filters["clue_values"]) if filters["clue_values"].present? && filters["clue_values"].is_a?(Array)
+
+    # Apply date range filters
+    scope = scope.where(air_date: filters["date_after"]..) if filters["date_after"].present?
+    scope = scope.where(air_date: ..filters["date_before"]) if filters["date_before"].present?
+
+    scope
+  end
+
   def fetch_clue
     pool = unseen_clue_ids
     return nil if pool.empty?
 
     clue = Clue.find(pool.sample)
-    logger.info "Fetched clue #{clue.id} from pool of #{pool.size} clues."
+    logger.info "Fetched clue #{clue.id} from filtered pool of #{pool.size} clues."
     clue
   end
 
@@ -66,7 +82,6 @@ class Drill < ApplicationRecord
     # then pop/unshift as drill progresses.
     def unseen_clue_ids
       seen_ids = drill_clues.pluck(:clue_id)
-      Clue.where.not(id: seen_ids, round: 3)
-        .pluck(:id) # exclude Final Jeopardy clues
+      filtered_clues.where.not(id: seen_ids).pluck(:id)
     end
 end

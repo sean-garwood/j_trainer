@@ -3,6 +3,7 @@
 one:
   round: 1
   clue_value: 200
+  normalized_clue_value: 200
   category: Geography
   clue_text: River mentioned most often in the Bible
   correct_response: What is the Jordan?
@@ -11,6 +12,7 @@ one:
 two:
   round: 2
   clue_value: 400
+  normalized_clue_value: 400
   category: History
   clue_text: This president was assassinated in 1865
   correct_response: Who is Abraham Lincoln?
@@ -19,15 +21,20 @@ two:
 three:
   round: 1
   clue_value: 400
+  normalized_clue_value: 400
   category: Programming
   clue_text: This programming language is known for its ++ operator
   correct_response: What is C++?
   air_date: 2025-04-29
 
 old:
+  round: 1
   clue_value: 100
+  normalized_clue_value: 200
   air_date: 2001-11-25
 
 new:
+  round: 1
   clue_value: 200
+  normalized_clue_value: 200
   air_date: 2001-11-26

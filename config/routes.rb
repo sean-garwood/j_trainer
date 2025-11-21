@@ -10,8 +10,9 @@ Rails.application.routes.draw do
 
   resources :drills, except: %i[edit update destroy] do
     collection do
-      get :train, to: "drills#train" # live training session.
-      post :end, to: "drills#end_current" # end current drill
+      get :train # Show filter configuration page
+      post :start # Create drill with filters and begin training
+      post :end, to: "drills#end_current", as: "end" # end current drill
     end
 
     # Nested route for submitting responses

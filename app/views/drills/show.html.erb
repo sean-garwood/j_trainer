@@ -17,6 +17,9 @@
         Sum of Clue Values: <%= format_currency(stats[:max_possible_score]) %>
       </li>
     </ul>
+
+    <%= render "active_filters", drill: @drill %>
+
     <div>
       <h3 class="font-semibold text-2xl mt-4">Clues</h3>
       <div class="space-y-6">

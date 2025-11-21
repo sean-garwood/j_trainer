@@ -27,7 +27,7 @@ class DrillCluesController < ApplicationController
         # Render Turbo Frame with next clue
         respond_to do |format|
           format.turbo_stream
-          format.html { redirect_to train_drills_path }
+          format.html { render "drills/training" }
         end
       end
     else
