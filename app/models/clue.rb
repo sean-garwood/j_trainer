@@ -7,8 +7,4 @@ class Clue < ApplicationRecord
 
   # The lack of validations is due to the fact that the data is write-once and
   # clean as hell.
-
-  def times_seen
-    drills.count
-  end
 end

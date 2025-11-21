@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   delete "logout", to: "sessions#destroy"
   get "sign_up", to: "registrations#new"
   post "sign_up", to: "registrations#create"
-  resources :passwords, param: :token
+  resources :passwords, param: :token, ony: %i[create update]
 
   resources :drills, except: %i[edit update destroy] do
     collection do
@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     end
 
     # Nested route for submitting responses
-    resources :drill_clues, only: [ :create ]
+    resources :drill_clues, only: :create
   end
 
   resources :clues, only: :show
