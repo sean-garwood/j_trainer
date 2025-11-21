@@ -43,6 +43,8 @@ class DrillsControllerTest < ActionDispatch::IntegrationTest
     assert_not_nil drill_id, "Expected a drill to be created"
 
     # End the drill
+    @drill = Drill.find(drill_id)
+    @drill.drill_clues.create!(clue: clues(:one), response: "Test", response_time: 2.0)
     post end_drills_path
     assert_response :redirect
 
@@ -79,6 +81,8 @@ class DrillsControllerTest < ActionDispatch::IntegrationTest
     drill_id = session[:current_drill_id]
 
     # End the drill
+    @drill = Drill.find(drill_id)
+    @drill.drill_clues.create!(clue: clues(:one), response: "Test", response_time: 2.0)
     post end_drills_path
     follow_redirect!
 

@@ -7,11 +7,10 @@ J! Trainer is a Jeopardy! training application inspired by [Protobowl](https://p
 ### Core Workflow
 
 1. User enters a training session (called a "drill")
-2. Clues are served one at a time from the database
-3. User can "buzz in" to answer or pass
-4. User self-judges answer as correct/incorrect/pass
-5. Stats are tracked per clue, category, and overall
-6. Users can review their performance history and identify improvement areas
+1. Clues are served one at a time from the database
+1. Stats are persisted; users can view past drill results.
+   - Plan to build out stat functionality once [clues are tagged](#clue-categorizationtagging-system)
+1. Users can review their performance history and identify improvement areas
 
 ### Data Source
 
@@ -24,7 +23,7 @@ J! Trainer is a Jeopardy! training application inspired by [Protobowl](https://p
 
 ### Backend
 
-- **Framework:** Ruby on Rails 8.0.2
+- **Framework:** Ruby on Rails 1.0.2
 - **Database:** SQLite3
 - **Authentication:** bcrypt (has_secure_password)
 - **Authorization:** CanCanCan
@@ -34,7 +33,7 @@ J! Trainer is a Jeopardy! training application inspired by [Protobowl](https://p
 ### Frontend
 
 - **Framework:** Hotwire (Turbo + Stimulus)
-- **Styling:** Tailwind CSS 4.x
+- **Styling:** Tailwind CSS 1.x
 - **Asset Pipeline:** Propshaft
 - **JavaScript:** Import maps (ESM)
 
@@ -92,25 +91,12 @@ The application currently has basic functionality but needs significant refactor
 
 - Code is hacky and needs refactoring
 - UI/UX needs polish
-- Data import process needs work
 
 ## TODOs
 
 ### High Priority
 
-#### 1. Data Sanitization
-
-**File:** `db/data/combined_season1-40.tsv`
-**Problem:** Contains problematic escaping and formatting issues
-**Tasks:**
-
-- [ ] Audit TSV for escape sequence issues
-- [ ] Clean up malformed entries
-- [ ] Standardize quote handling
-- [ ] Create sanitized version or import script with cleaning logic
-- [ ] Document cleaning process for future data imports
-
-#### 2. Clue Categorization/Tagging System
+#### Clue Categorization/Tagging System
 
 **Problem:** Need to tag clues with standardized subjects for filtering
 **Example:** "LAKES & RIVERS" → geography subject
@@ -125,7 +111,7 @@ The application currently has basic functionality but needs significant refactor
 
 ### Medium Priority
 
-#### 3. Clue Filtering
+#### Clue Filtering
 
 - [ ] Filter by category (original Jeopardy category)
 - [ ] Filter by subject tags (once tagging system exists)
@@ -133,7 +119,7 @@ The application currently has basic functionality but needs significant refactor
 - [ ] Filter by round (Jeopardy/Double Jeopardy/Final Jeopardy)
 - [ ] Filter by date range (air_date)
 
-#### 4. Statistics & Analytics
+#### Statistics & Analytics
 
 - [ ] Overall lifetime score
 - [ ] Performance by category/subject
@@ -145,7 +131,7 @@ The application currently has basic functionality but needs significant refactor
 - [ ] Streak tracking (current streak, longest streak)
 - [ ] Time-based analytics (improvement over time)
 
-#### 5. Drill Enhancements
+#### 1. Drill Enhancements
 
 - [ ] Drill configuration options:
   - Number of clues
@@ -177,12 +163,11 @@ The application currently has basic functionality but needs significant refactor
 - **MUST** write controller tests for all actions
 - **SHOULD** write integration tests for critical user flows
 - **MUST** run full test suite before any commit: `rails test`
-- Guard is configured for auto-running tests during development
 
 ### Code Quality
 
 - **MUST** run RuboCop before committing: `bundle exec rubocop -a`
-- **MUST** follow Rails Omakase style guide
+- **SHOULD** enforce .rubocop.yml
 - **SHOULD** run Brakeman periodically: `bundle exec brakeman`
 - **MUST** keep models skinny, use service objects for complex logic
 - **MUST** use Turbo Frames/Streams for dynamic updates (avoid full page reloads)
@@ -227,10 +212,10 @@ notes                : Additional notes (often empty)
 ### Data Challenges
 
 1. **Escaping:** Quotes, backslashes, and special characters are inconsistently escaped
-2. **Duplicates:** May contain duplicate clues across different air dates
-3. **Formatting:** Response format varies ("What is the Jordan?" vs "What is Jordan?" vs "What is The Jordan River?")
-4. **Missing Data:** Some fields may be empty or contain placeholder values
-5. **Era Variations:** Dollar values changed over time ($100-$500 vs $200-$1000)
+1. **Duplicates:** May contain duplicate clues across different air dates
+1. **Formatting:** Response format varies ("What is the Jordan?" vs "What is Jordan?" vs "What is The Jordan River?")
+1. **Missing Data:** Some fields may be empty or contain placeholder values
+1. **Era Variations:** Dollar values changed over time ($100-$500 vs $200-$1000)
 
 ## Architecture Decisions
 

@@ -5,13 +5,15 @@ class Drill < ApplicationRecord
 
   after_save :update_counts!
 
+  # TODO: add columns to the drills table to persist these values
+  # could also create a separate DrillStats model if needed
+
   def stats
     {
       correct: correct_count,
       incorrect: incorrect_count,
       pass: pass_count,
       seen: clues_seen_count,
-      # TODO: add columns to the drills table to persist these values
       accuracy: accuracy,
       coryat_score: coryat_score,
       max_possible_score: max_possible_score
@@ -33,20 +35,17 @@ class Drill < ApplicationRecord
     clue
   end
 
-  def update_counts!
-    total = drill_clues.count
-    correct = drill_clues.correct.count
-    incorrect = drill_clues.incorrect.count
-    passed = drill_clues.pass.count
+def update_counts!
+  counts = drill_clues.group(:result).count
 
-    update_columns(
-      clues_seen_count: total,
-      correct_count: correct,
-      incorrect_count: incorrect,
-      pass_count: passed,
-      updated_at: Time.current
-    )
-  end
+  update_columns(
+    clues_seen_count: counts.values.sum,
+    correct_count: counts["correct"] || 0,
+    incorrect_count: counts["incorrect"] || 0,
+    pass_count: counts["pass"] || 0,
+    updated_at: Time.current
+  )
+end
 
   def coryat_score
     score = 0

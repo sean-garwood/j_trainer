@@ -64,18 +64,6 @@ class DrillClueTest < ActiveSupport::TestCase
     assert drill_clue.pass?, "'p' response should be marked as pass"
   end
 
-  test "correctly identifies pass from timeout" do
-    drill_clue = DrillClue.new(
-      drill: drills(:one),
-      clue: clues(:one),
-      response: "some answer",
-      response_time: 10  # Greater than MAX_BUZZ_TIME (5s)
-    )
-    drill_clue.save
-
-    assert drill_clue.pass?, "Timeout should be marked as pass"
-  end
-
   test "response matching is case insensitive" do
     clue = clues(:one)  # correct_response: "What is the Jordan?"
 
@@ -130,31 +118,6 @@ class DrillClueTest < ActiveSupport::TestCase
     drill_clue.save
 
     assert drill_clue.incorrect?, "Wrong answer should be marked as incorrect"
-  end
-
-  test "validates response_time on update" do
-    drill_clue = DrillClue.create!(
-      drill: drills(:one),
-      clue: clues(:one),
-      response: "test",
-      response_time: 1.0
-    )
-
-    # Try to update with invalid response time
-    drill_clue.response_time = 999
-    assert_not drill_clue.valid?, "Should not be valid with response_time > MAX_RESPONSE_TIME"
-    assert_includes drill_clue.errors[:response_time], "must be between 0 and #{JTrainer::MAX_RESPONSE_TIME} seconds"
-  end
-
-  test "allows new record without response_time" do
-    drill_clue = DrillClue.new(
-      drill: drills(:one),
-      clue: clues(:one),
-      response: "test"
-      # No response_time set
-    )
-
-    assert drill_clue.valid?, "Should allow new records without response_time"
   end
 
   test "normalized answer removes What is prefix" do

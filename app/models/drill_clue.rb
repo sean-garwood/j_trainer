@@ -1,16 +1,8 @@
 class DrillClue < ApplicationRecord
   belongs_to :drill
   belongs_to :clue
-  # TODO: use delegated types?
   # https://edgeapi.rubyonrails.org/classes/ActiveRecord/DelegatedType.html
   delegate :correct_response, to: :clue
-
-  validates :response_time,
-    inclusion: {
-      in: 0..JTrainer::MAX_RESPONSE_TIME,
-      message: "must be between 0 and #{JTrainer::MAX_RESPONSE_TIME} seconds"
-    },
-    unless: :new_record?
 
   enum :result, { incorrect: -1, pass: 0, correct: 1 }
 
@@ -52,12 +44,7 @@ class DrillClue < ApplicationRecord
 
     def response_indicates_pass?
       response.blank? ||
-      normalize_text(response).match?(/\Ap(?:ass)?\z/i) ||
-      no_buzz?
-    end
-
-    def no_buzz?
-      response_time.to_f > JTrainer::MAX_BUZZ_TIME
+      normalize_text(response).match?(/\Ap(?:ass)?\z/i)
     end
 
     def update_drill_counts
