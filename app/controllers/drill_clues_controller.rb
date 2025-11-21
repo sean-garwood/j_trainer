@@ -45,6 +45,6 @@ class DrillCluesController < ApplicationController
   end
 
   def drill_clue_params
-    params.expect(drill_clue: [ :clue_id, :response, :response_time ])
+    params.expect(drill_clue: %i[clue_id response response_time])
   end
 end

@@ -2,7 +2,7 @@ class DrillsController < ApplicationController
   load_and_authorize_resource
   # OPTIMIZE: Cache current drill ID to minimize session access
   before_action -> { @cached_drill_id ||= session[:current_drill_id] },
-    only: [ :train, :end_current ]
+    only: %i[train end_current]
 
   def index
     # Paginate drills, ordered by most recent first, 10 per page

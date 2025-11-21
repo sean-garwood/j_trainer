@@ -23,7 +23,7 @@ class Drill < ApplicationRecord
   def accuracy
     return "0%" if clues_seen_count.zero?
 
-    (correct_count.to_f / clues_seen_count * 100).round(2).to_s + "%"
+    "#{(correct_count.to_f / clues_seen_count * 100).round(2)}%"
   end
 
   def fetch_clue
@@ -35,17 +35,17 @@ class Drill < ApplicationRecord
     clue
   end
 
-def update_counts!
-  counts = drill_clues.group(:result).count
+  def update_counts!
+    counts = drill_clues.group(:result).count
 
-  update_columns(
-    clues_seen_count: counts.values.sum,
-    correct_count: counts["correct"] || 0,
-    incorrect_count: counts["incorrect"] || 0,
-    pass_count: counts["pass"] || 0,
-    updated_at: Time.current
-  )
-end
+    update_columns(
+      clues_seen_count: counts.values.sum,
+      correct_count: counts["correct"] || 0,
+      incorrect_count: counts["incorrect"] || 0,
+      pass_count: counts["pass"] || 0,
+      updated_at: Time.current
+    )
+  end
 
   def coryat_score
     score = 0

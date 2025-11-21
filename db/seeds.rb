@@ -21,7 +21,7 @@ if Clue.count.zero?
   begin
     Rake::Task["clues:import"].invoke
     puts "Clue import completed."
-  rescue => e
+  rescue StandardError => e
     puts "Error during clue import: #{e.message}"
   end
 else

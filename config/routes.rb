@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resource :session, only: %i[new create destroy]
-  resolve ("Session") { [ :session ] }
+  resolve("Session") { [ :session ] }
   get "login", to: "sessions#new"
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy"

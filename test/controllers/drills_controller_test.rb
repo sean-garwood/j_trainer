@@ -92,7 +92,7 @@ class DrillsControllerTest < ActionDispatch::IntegrationTest
 
   test "invalidates cache when cached drill no longer exists" do
     # Manually set a non-existent drill_id in session
-    non_existent_id = 999999
+    non_existent_id = 999_999
     session[:current_drill_id] = non_existent_id
 
     # Request train page - should handle missing drill gracefully

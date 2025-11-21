@@ -12,12 +12,12 @@ class DrillClue < ApplicationRecord
 
   private
     def set_result
-      if response_matches_correct_response?
-        self.result = :correct
+      self.result = if response_matches_correct_response?
+        :correct
       elsif response_indicates_pass?
-        self.result = :pass
+        :pass
       else
-        self.result = :incorrect
+        :incorrect
       end
     end
 

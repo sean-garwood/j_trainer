@@ -59,7 +59,7 @@ namespace :clues do
 
           parsed_air_date = begin
             Date.parse(air_date)
-          rescue
+          rescue StandardError
             Date.today  # Fallback if date parsing fails
           end
 
@@ -86,7 +86,7 @@ namespace :clues do
             print "\rImported: #{imported_count} | Skipped: #{skipped_count} | Errors: #{error_count}"
           end
 
-        rescue => e
+        rescue StandardError => e
           error_count += 1
           if error_count <= 10  # Only show first 10 errors
             puts "\nError on line #{line_number}: #{e.message}"
@@ -101,7 +101,7 @@ namespace :clues do
       end
     end
 
-    puts "\n\n" + line_break
+    puts "\n\n#{line_break}"
     puts "Import completed!"
     line_break
     puts "Successfully imported: #{imported_count} clues"
@@ -114,7 +114,7 @@ namespace :clues do
   desc "Clear all clues from the database"
   task clear: :environment do
     print "Are you sure you want to delete all #{Clue.count} clues? (yes/no): "
-    confirmation = STDIN.gets.chomp
+    confirmation = $stdin.gets.chomp
     if confirmation.downcase == "yes"
       count = Clue.count
       Clue.delete_all
@@ -127,7 +127,7 @@ namespace :clues do
   desc "Show import statistics"
   task stats: :environment do
     total = Clue.count
-    aggregate_clues_by = ->(col, should_order = false) do
+    aggregate_clues_by = lambda do |col, should_order = false|
         if should_order
           Clue.group(col).order(col).count
         else
@@ -193,7 +193,7 @@ namespace :clues do
     end
 
     def line_break(width = 80)
-      "#{'=' * width}"
+      ("=" * width).to_s
     end
 
     def show_date_range
