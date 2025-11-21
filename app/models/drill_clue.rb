@@ -1,6 +1,9 @@
 class DrillClue < ApplicationRecord
   belongs_to :drill
   belongs_to :clue
+  # TODO: use delegated types?
+  # https://edgeapi.rubyonrails.org/classes/ActiveRecord/DelegatedType.html
+  delegate :correct_response, to: :clue
 
   validates :response_time,
     inclusion: {
@@ -17,10 +20,9 @@ class DrillClue < ApplicationRecord
 
   private
     def set_result
-      case true
-      when response_matches_correct_response?
+      if response_matches_correct_response?
         self.result = :correct
-      when response_indicates_pass?
+      elsif response_indicates_pass?
         self.result = :pass
       else
         self.result = :incorrect
@@ -28,12 +30,16 @@ class DrillClue < ApplicationRecord
     end
 
     # TODO: improve matching logic
+    #   accept last name only for person answers (except Jones, etc.)
     def response_matches_correct_response?
+      exact_match?(correct_response)
+    end
+
+    def exact_match?(correct_response)
       return false if response.blank?
 
       # Extract answer from "What is X?" format if present
-      # TODO: accept last name only for person answers (except Jones, etc.)
-      answer_text = strip_pronouns(clue.correct_response)
+      answer_text = strip_pronouns(correct_response)
 
       # Normalize both strings: downcase, remove punctuation, trim
       normalized_response = normalize_text(response)
