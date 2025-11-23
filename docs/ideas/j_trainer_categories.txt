@@ -1,0 +1,14 @@
+wordplay
+potpourri
+geography
+history
+literature
+science
+music
+entertainment
+cinema
+	OR movies
+sports
+art
+business
+word origins
