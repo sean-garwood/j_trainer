@@ -99,6 +99,18 @@ class DrillsControllerTest < ActionDispatch::IntegrationTest
     assert_nil session[:current_drill_id], "Expected no drill to be created yet"
   end
 
+  test "GET start redirects to train page" do
+    get start_drills_path
+    assert_redirected_to "/drills/train"
+  end
+
+  test "show with non-numeric id redirects to drills index" do
+    get drill_path("abc")
+    assert_redirected_to drills_path
+    follow_redirect!
+    assert_select "div", text: /Invalid drill ID/i
+  end
+
   test "start action creates drill with filters" do
     # Start a drill with filters
     post start_drills_path, params: { round: 1, clue_values: [ 200, 400 ] }

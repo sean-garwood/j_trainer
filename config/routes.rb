@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   resources :drills, except: %i[edit update destroy] do
     collection do
       get :train # Show filter configuration page
+      get :start, to: redirect("/drills/train") # Handle browser refresh after POST
       post :start # Create drill with filters and begin training
       post :end, to: "drills#end_current", as: "end" # end current drill
     end
