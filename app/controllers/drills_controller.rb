@@ -1,5 +1,6 @@
 class DrillsController < ApplicationController
   load_and_authorize_resource
+  prepend_before_action :validate_numeric_id, only: :show
   # OPTIMIZE: Cache current drill ID to minimize session access
   before_action -> { @cached_drill_id ||= session[:current_drill_id] },
     only: %i[train end_current]
@@ -106,5 +107,11 @@ class DrillsController < ApplicationController
 
     def drill_params
       params.expect(drill: [ :id ])
+    end
+
+    def validate_numeric_id
+      unless params[:id].to_s.match?(/\A\d+\z/)
+        redirect_to drills_path, alert: "Invalid drill ID."
+      end
     end
 end
