@@ -111,6 +111,37 @@ class DrillsControllerTest < ActionDispatch::IntegrationTest
     assert_select "div", text: /Invalid drill ID/i
   end
 
+  test "show page renders styled stats cards" do
+    drill = drills(:one)
+    # Ensure there's at least one drill_clue
+    drill.drill_clues.create!(clue: clues(:one), response: "test", response_time: 1.0) if drill.drill_clues.empty?
+    get drill_path(drill)
+    assert_response :success
+    # Should have a styled container
+    assert_select ".bg-gray-50"
+    # Should have stats grid with cards
+    assert_select ".grid"
+    # Should show Coryat score
+    assert_select "div", /Coryat/
+  end
+
+  test "show page renders color-coded result badges for drill clues" do
+    drill = drills(:one)
+    drill.drill_clues.create!(clue: clues(:two), response: "Abraham Lincoln", response_time: 1.0)
+    get drill_path(drill)
+    assert_response :success
+    # Correct answers get green badge
+    assert_select ".bg-green-100"
+    # Incorrect answers get red badge
+    assert_select ".bg-red-100"
+  end
+
+  test "header uses Jeopardy blue theme" do
+    get drills_path
+    assert_response :success
+    assert_select "header.bg-blue-900"
+  end
+
   test "start action creates drill with filters" do
     # Start a drill with filters
     post start_drills_path, params: { round: 1, clue_values: [ 200, 400 ] }
