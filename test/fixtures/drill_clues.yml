@@ -5,9 +5,11 @@ one:
   clue: one
   response_time: 1.5
   response: wrong answer # will be marked as incorrect
+  result: -1
 
 two:
   drill: two
   clue: two
   response_time: 1.5
   response: Abraham Lincoln # correct answer for clue two
+  result: 1
