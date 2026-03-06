@@ -1,3 +1,21 @@
+<%= turbo_stream.update "drill_toast" do %>
+  <% if @previous_drill_clue.correct? %>
+    <div class="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg text-center font-semibold text-lg"
+         data-controller="auto-dismiss">
+      Correct!
+    </div>
+  <% elsif @previous_drill_clue.incorrect? %>
+    <div class="bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg text-center font-semibold text-lg"
+         data-controller="auto-dismiss">
+      Incorrect &mdash; <%= @previous_drill_clue.correct_response %>
+    </div>
+  <% else %>
+    <div class="bg-gray-500 text-white px-6 py-3 rounded-lg shadow-lg text-center font-semibold text-lg"
+         data-controller="auto-dismiss">
+      Passed &mdash; <%= @previous_drill_clue.correct_response %>
+    </div>
+  <% end %>
+<% end %>
 <%= turbo_stream.replace "drill_clue_frame" do %>
   <%= turbo_frame_tag "drill_clue_frame" do %>
     <%= render "drills/clue_form",
