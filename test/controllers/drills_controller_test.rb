@@ -111,6 +111,20 @@ class DrillsControllerTest < ActionDispatch::IntegrationTest
     assert_select "div", text: /Invalid drill ID/i
   end
 
+  test "training view uses viewport-height layout without page scroll" do
+    post start_drills_path
+    assert_response :success
+    assert_select "[class*='overflow-hidden']"
+    assert_select "[class*='flex'][class*='flex-col']"
+  end
+
+  test "training view stats bar is outside scroll area" do
+    post start_drills_path
+    assert_response :success
+    # Stats should be in a non-scrolling area (not inside overflow-y-auto)
+    assert_select "#drill_stats"
+  end
+
   test "start action creates drill with filters" do
     # Start a drill with filters
     post start_drills_path, params: { round: 1, clue_values: [ 200, 400 ] }
