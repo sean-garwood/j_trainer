@@ -1,4 +1,5 @@
 <div class="max-w-4xl mx-auto mt-8 p-6">
+  <div id="drill_toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-50"></div>
   <%= render "active_filters", drill: @drill %>
 
   <%= turbo_frame_tag "drill_clue_frame" do %>
