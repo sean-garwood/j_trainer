@@ -1,51 +1,98 @@
-<div>
-  <h1 class="font-bold text-4xl">Drill Details</h1>
-  <h2><%= @drill.created_at %></h2>
-  <div class="mt-4">
-    <h3 class="font-semibold text-2xl">Statistics</h3>
-    <ul class="list-none list-inside">
-      <% stats = @drill.stats %>
-      <li>Correct Answers: <%= stats[:correct] %></li>
-      <li>Incorrect Answers: <%= stats[:incorrect] %></li>
-      <li>Passes: <%= stats[:pass] %></li>
-      <li>Clues Seen: <%= stats[:seen] %></li>
-      <li>Accuracy: <%= stats[:accuracy] %></li>
-      <li>
-        Coryat Score: <%= format_currency(stats[:coryat_score]) %>
-      </li>
-      <li>
-        Sum of Clue Values: <%= format_currency(stats[:max_possible_score]) %>
-      </li>
-    </ul>
+<div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto">
+    <div class="mb-6">
+      <h1 class="text-3xl font-bold text-gray-900">Drill Results</h1>
+      <p class="text-gray-500 mt-1"><%= @drill.created_at.localtime.strftime("%B %d, %Y at %l:%M %p") %></p>
+    </div>
 
     <%= render "active_filters", drill: @drill %>
 
-    <div>
-      <h3 class="font-semibold text-2xl mt-4">Clues</h3>
-      <div class="space-y-6">
-        <% @drill.drill_clues.each do |clue| %>
-          <div class="p-4 border rounded-lg">
-            <h4 class="font-semibold text-xl"><%=
-            case clue.clue.round
-            when 1
-              ""
-            when 2
-              "Double "
-            when 3
-              "Final "
-            end %>Jeopardy!</h4>
-            <h4 class="font-semibold text-xl"><%= clue.clue.category %></h4>
-            <h4 class="font-semibold text-xl">
-              <%= format_currency(clue.clue.normalized_clue_value) %>
-            </h4>
-            <h4 class="font-semibold text-xl"><%= clue.clue.clue_text %></h4>
-            <p>Your Answer: <span class="<%= clue.correct? ? 'text-green-600' : 'text-red-600' %>"><%= clue.response %></span></p>
-            <% unless clue.correct? %>
-              <p>Correct Answer: <span class="text-green-600"><%= clue.clue.correct_response %></span></p>
-            <% end %>
-          </div>
-        <% end %>
+    <% stats = @drill.stats %>
+
+    <%# Stats Grid %>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+      <div class="bg-white rounded-lg shadow p-4 text-center">
+        <div class="text-2xl font-bold text-green-600"><%= stats[:correct] %></div>
+        <div class="text-sm text-gray-500">Correct</div>
       </div>
+      <div class="bg-white rounded-lg shadow p-4 text-center">
+        <div class="text-2xl font-bold text-red-600"><%= stats[:incorrect] %></div>
+        <div class="text-sm text-gray-500">Incorrect</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4 text-center">
+        <div class="text-2xl font-bold text-gray-500"><%= stats[:pass] %></div>
+        <div class="text-sm text-gray-500">Passed</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4 text-center">
+        <div class="text-2xl font-bold text-blue-600"><%= stats[:seen] %></div>
+        <div class="text-sm text-gray-500">Seen</div>
+      </div>
+    </div>
+
+    <%# Score Summary %>
+    <div class="bg-white rounded-lg shadow p-6 mb-8 flex flex-wrap justify-around gap-4">
+      <div class="text-center">
+        <div class="text-sm text-gray-500">Accuracy</div>
+        <div class="text-xl font-bold <%= stats[:accuracy].to_s.to_f >= 70 ? 'text-green-600' : stats[:accuracy].to_s.to_f >= 50 ? 'text-yellow-600' : 'text-red-600' %>">
+          <%= stats[:accuracy] %>
+        </div>
+      </div>
+      <div class="text-center">
+        <div class="text-sm text-gray-500">Coryat Score</div>
+        <div class="text-xl font-bold text-indigo-600"><%= format_currency(stats[:coryat_score]) %></div>
+      </div>
+      <div class="text-center">
+        <div class="text-sm text-gray-500">Max Possible</div>
+        <div class="text-xl font-bold text-gray-700"><%= format_currency(stats[:max_possible_score]) %></div>
+      </div>
+    </div>
+
+    <%# Clue Review %>
+    <h2 class="text-xl font-bold text-gray-900 mb-4">Clue Review</h2>
+    <div class="space-y-4">
+      <% @drill.drill_clues.each do |dc| %>
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+          <div class="bg-blue-900 px-4 py-3 flex justify-between items-center">
+            <span class="text-yellow-400 font-semibold">
+              <%= dc.clue.category %>
+            </span>
+            <span class="text-blue-200 text-sm">
+              <%= format_currency(dc.clue.normalized_clue_value) %> &middot;
+              <%= case dc.clue.round when 1 then "Jeopardy!" when 2 then "Double Jeopardy!" when 3 then "Final Jeopardy!" end %>
+            </span>
+          </div>
+          <div class="p-4">
+            <p class="text-gray-700 mb-3"><%= dc.clue.clue_text %></p>
+            <div class="flex flex-wrap items-center gap-3">
+              <% if dc.correct? %>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                  Correct
+                </span>
+              <% elsif dc.incorrect? %>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                  Incorrect
+                </span>
+              <% else %>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                  Passed
+                </span>
+              <% end %>
+              <span class="text-sm text-gray-600">
+                Your answer: <span class="font-medium"><%= dc.response.presence || "(no response)" %></span>
+              </span>
+              <% unless dc.correct? %>
+                <span class="text-sm text-green-700">
+                  Correct: <span class="font-medium"><%= dc.clue.correct_response %></span>
+                </span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-8 text-center">
+      <%= link_to "Back to Drills", drills_path, class: "text-indigo-600 hover:text-indigo-800 font-medium" %>
     </div>
   </div>
 </div>
