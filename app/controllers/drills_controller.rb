@@ -110,8 +110,7 @@ class DrillsController < ApplicationController
     end
 
     def validate_numeric_id
-      unless params[:id].to_s.match?(/\A\d+\z/)
-        redirect_to drills_path, alert: "Invalid drill ID."
-      end
+      return if params[:id].to_s.match?(/\A\d+\z/)
+      redirect_to drills_path, alert: "Invalid drill ID."
     end
 end
