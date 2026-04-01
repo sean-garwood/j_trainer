@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_21_212948) do
+ActiveRecord::Schema[8.0].define(version: 20_251_121_212_948) do
   create_table "clues", force: :cascade do |t|
     t.integer "round"
     t.integer "clue_value"
@@ -34,8 +34,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_21_212948) do
     t.string "response"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["clue_id"], name: "index_drill_clues_on_clue_id"
-    t.index ["drill_id"], name: "index_drill_clues_on_drill_id"
+    t.index [ "clue_id" ], name: "index_drill_clues_on_clue_id"
+    t.index [ "drill_id" ], name: "index_drill_clues_on_drill_id"
   end
 
   create_table "drills", force: :cascade do |t|
@@ -49,7 +49,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_21_212948) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.json "filters", default: {}
-    t.index ["user_id"], name: "index_drills_on_user_id"
+    t.index [ "user_id" ], name: "index_drills_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -58,7 +58,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_21_212948) do
     t.string "user_agent"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_sessions_on_user_id"
+    t.index [ "user_id" ], name: "index_sessions_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -66,7 +66,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_21_212948) do
     t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index [ "email_address" ], name: "index_users_on_email_address", unique: true
   end
 
   add_foreign_key "drill_clues", "clues"
