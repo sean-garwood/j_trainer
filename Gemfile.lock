@@ -453,5 +453,8 @@ DEPENDENCIES
   tzinfo-data
   web-console
 
+RUBY VERSION
+   ruby 4.0.0p0
+
 BUNDLED WITH
    2.6.8
