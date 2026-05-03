@@ -78,3 +78,4 @@ If the warnings annoy you, you can suppress them by setting an environment varia
 
 But I'd recommend leaving them as-is for now since they're not causing problems.
 ```
+- fix test parallelization
