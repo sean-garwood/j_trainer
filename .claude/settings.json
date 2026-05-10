@@ -2,7 +2,7 @@
   "permissions": {
     "allow": [
       "Bash(bundle exec rubocop *)",
-      "Bash(bundle exec brakeman)",
+      "Bash(bundle exec brakeman *)",
       "Bash(bundle exec minitest)",
       "Bash(bundle install)",
       "Bash(bin/rails db:migrate*)",

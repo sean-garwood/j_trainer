@@ -55,3 +55,26 @@ Generally:
 - [ ] Export stats to CSV/PDF
 - [ ] Mobile-responsive design improvements
 - [ ] Progressive Web App (PWA) features
+
+## annoyances
+
+- [ ] Silence errors on `bin/rails test`
+
+### test error context
+
+```bash
+$ cat /tmp/foo | claude --model haiku --permission-mode default --disable-slash-commands --effort low -p "What is causing these errors when i run bin/rails test?"
+Those aren't errors—they're warnings from Bundler trying to monkey-patch Ruby's `Gem::Platform` constants. This happens when Bundler redefines constants that are already loaded, and it's a known issue with certain Ruby/Bundler version combinations.
+
+These warnings are **harmless and don't affect your tests**. They just mean:
+1. Ruby's rubygems loads `Gem::Platform::JAVA` and `Gem::Platform::MSWIN`
+2. Bundler tries to redefine them and warns about the duplication
+
+**Are your tests actually failing**, or are you just seeing these warnings? If tests are running and passing, you can safely ignore them. If tests are actually failing, there should be additional output below these warnings showing what broke—can you share that?
+
+If the warnings annoy you, you can suppress them by setting an environment variable:
+
+# RUBYOPT="-W0" bin/rails test
+
+But I'd recommend leaving them as-is for now since they're not causing problems.
+```
