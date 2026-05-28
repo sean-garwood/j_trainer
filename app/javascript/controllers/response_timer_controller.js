@@ -1,15 +1,15 @@
 import { Controller } from "@hotwired/stimulus";
-import { MAX_RESPONSE_TIME, MAX_BUZZ_TIME } from "../constants";
 
 export default class extends Controller {
   static targets = ["timeField", "input", "countdown"];
+  // TODO: unmagic defaults
   static values = {
-    maxResponseTime: { type: Number, default: MAX_RESPONSE_TIME },
-    maxBuzzTime: { type: Number, default: MAX_BUZZ_TIME },
+    maxResponseTime: { type: Number, default: 15 },
+    maxBuzzTime: { type: Number, default: 5 },
   };
 
   get now() {
-    return new Date().getTime(); // FIX: Added return
+    return new Date().getTime();
   }
 
   connect() {
@@ -21,11 +21,11 @@ export default class extends Controller {
   }
 
   startResponseCountdown() {
-    this.timeLeft = this.maxResponseTime; // FIX: Define in scope
+    this.timeLeft = this.maxResponseTime;
     this.updateCountdown();
 
-    this.responseInterval = setInterval(() => {
-      this.timeLeft -= 0.1;
+    const countdown = setInterval(() => {
+      this.timeLeft -= 1;
       this.updateCountdown();
 
       if (this.timeLeft <= 0) {
@@ -33,19 +33,21 @@ export default class extends Controller {
         this.countdownTarget.textContent = "Time's up!";
         this.inputTarget.disabled = true;
         this.timeFieldTarget.value = this.maxResponseTime;
-        this.element.requestSubmit(); // Auto-submit when timer expires
+        // FIXIT: does not seem to submit the request properly
+        this.element.requestSubmit();
       }
-    }, 100); // Update every 100ms for smooth countdown
+    }, 1000);
+    this.responseInterval = countdown;
   }
 
   updateCountdown() {
-    const secondsLeft = this.timeLeft.toFixed(1);
+    const secondsLeft = this.timeLeft.toFixed();
     this.countdownTarget.textContent = `Time remaining: ${secondsLeft}s`;
   }
 
   beforeSubmit(event) {
     const endTime = this.now;
-    const responseTime = (endTime - this.clueDisplayTime) / 1000; // Convert to seconds
+    const responseTime = (endTime - this.clueDisplayTime) / 1000;
     this.timeFieldTarget.value = responseTime;
     this.clearIntervals();
   }
@@ -56,7 +58,7 @@ export default class extends Controller {
 
   clearIntervals() {
     if (this.responseInterval) {
-      clearInterval(this.responseInterval); // FIX: Correct syntax
+      clearInterval(this.responseInterval);
     }
   }
 }
