@@ -7,4 +7,4 @@ of performance statistics over time.
 
 MUST NOT commit .env or credentials
 
-@guidelines
+@guidelines.md
