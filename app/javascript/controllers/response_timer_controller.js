@@ -1,11 +1,11 @@
 import { Controller } from "@hotwired/stimulus";
-import { MAX_RESPONSE_TIME, MAX_BUZZ_TIME } from "../constants";
 
 export default class extends Controller {
   static targets = ["timeField", "input", "countdown"];
+  // TODO: unmagic defaults
   static values = {
-    maxResponseTime: { type: Number, default: MAX_RESPONSE_TIME },
-    maxBuzzTime: { type: Number, default: MAX_BUZZ_TIME },
+    maxResponseTime: { type: Number, default: 15 },
+    maxBuzzTime: { type: Number, default: 5 },
   };
 
   get now() {
