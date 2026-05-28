@@ -1,10 +1,10 @@
+CLUES_TSV_URI = "db/data/combined_season1-41.tsv".freeze
 namespace :clues do
   # TODO: tags/categories filtering
   # that we want to track stats for.
   # e.g. "History", but not "European History"
   # This ensures that we are properly tagging clues for user stats.
   # Of course, the release will be more comprehensive later on.
-  CLUES_TSV_URI = "db/data/combined_season1-41.tsv"
   desc "Import clues from TSV file (#{CLUES_TSV_URI})"
   task import: :environment do
     require "csv"
