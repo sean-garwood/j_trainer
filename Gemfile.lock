@@ -83,7 +83,7 @@ GEM
     bcrypt_pbkdf (1.1.2)
     bigdecimal (4.1.2)
     bindex (0.8.1)
-    bootsnap (1.23.0)
+    bootsnap (1.24.1)
       msgpack (~> 1.2)
     brakeman (8.0.4)
       racc
@@ -144,6 +144,7 @@ GEM
     guard-minitest (3.0.0)
       guard-compat (~> 1.2)
       minitest (>= 5.0.4, < 7.0)
+    htmlbeautifier (1.4.3)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.2.3)
@@ -252,7 +253,7 @@ GEM
       date
       stringio
     public_suffix (7.0.5)
-    puma (8.0.0)
+    puma (8.0.1)
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.8.1)
@@ -437,6 +438,7 @@ DEPENDENCIES
   debug
   guard
   guard-minitest
+  htmlbeautifier
   importmap-rails
   jbuilder
   kamal

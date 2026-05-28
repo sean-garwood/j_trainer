@@ -1,14 +1,15 @@
+CLUES_TSV_URI = "db/data/combined_season1-41.tsv".freeze
 namespace :clues do
   # TODO: tags/categories filtering
   # that we want to track stats for.
   # e.g. "History", but not "European History"
   # This ensures that we are properly tagging clues for user stats.
   # Of course, the release will be more comprehensive later on.
-  desc "Import clues from TSV file (db/data/combined_season1-40.tsv)"
+  desc "Import clues from TSV file (#{CLUES_TSV_URI})"
   task import: :environment do
     require "csv"
-    include ClueValueHelper
-    file_path = Rails.root.join("db/data/combined_season1-40.tsv")
+    include ClueValueNormalizer
+    file_path = Rails.root.join(CLUES_TSV_URI)
 
     unless File.exist?(file_path)
       puts "Error: File not found at #{file_path}"
@@ -67,7 +68,7 @@ namespace :clues do
             round: round.to_i,
             clue_value: clue_value.to_i,
             normalized_clue_value:
-              ClueValueHelper.normalize_clue_value(clue_value.to_i, air_date),
+              ClueValueNormalizer.normalize_clue_value(clue_value.to_i, air_date),
             daily_double_value: daily_double_value.to_i,
             category: category,
             comments: comments,
