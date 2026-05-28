@@ -144,6 +144,7 @@ GEM
     guard-minitest (3.0.0)
       guard-compat (~> 1.2)
       minitest (>= 5.0.4, < 7.0)
+    htmlbeautifier (1.4.3)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.2.3)
@@ -433,6 +434,7 @@ DEPENDENCIES
   debug
   guard
   guard-minitest
+  htmlbeautifier
   importmap-rails
   jbuilder
   kamal
