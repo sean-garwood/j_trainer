@@ -16,7 +16,7 @@ puts "Added/found sample user for #{Rails.env}"
 
 # Import clues if none exist.
 
-if Clue.count.zero?
+if Clue.none?
   puts "No clues found. Running clues:import task..."
   begin
     Rake::Task["clues:import"].invoke
