@@ -12,9 +12,9 @@
       "Bash(bin/rails help *)"
     ],
     "deny": [
-      "Bash(rails *)", // force bin/rails
-      "Bash(bin/rails db:drop)", // force bin/rails
-      "Bash(bundle exec guard)", // No watch mode
+      "Bash(rails *)",
+      "Bash(bin/rails db:drop)",
+      "Bash(bundle exec guard)",
       "Bash(guard)"
     ],
     "ask": [

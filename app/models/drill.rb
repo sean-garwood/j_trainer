@@ -8,6 +8,7 @@ class Drill < ApplicationRecord
   # TODO: add columns to the drills table to persist these values
   # could also create a separate DrillStats model if needed
 
+  # TODO: DrillStats model
   def stats
     {
       correct: correct_count,
@@ -26,6 +27,7 @@ class Drill < ApplicationRecord
     "#{(correct_count.to_f / clues_seen_count * 100).round(2)}%"
   end
 
+  # OPTIMIZE: preload/includes to load once
   def filtered_clues
     scope = Clue.where.not(round: 3) # Exclude Final Jeopardy
 
@@ -42,7 +44,9 @@ class Drill < ApplicationRecord
     scope
   end
 
+  # OPTIMIZE
   def fetch_clue
+    # OPTIMIZE: Do this once at startup, del id from pool as drill progresses.
     pool = unseen_clue_ids
     return nil if pool.empty?
 
@@ -64,12 +68,12 @@ class Drill < ApplicationRecord
   end
 
   def coryat_score
-    score = 0
-    drill_clues.includes(:clue).find_each do |dc|
-      score = score.send(
-        dc.result == "correct" ? :+ : :-, dc.clue.normalized_clue_value)
+    drill_clues.includes([ :clue ]).reduce(0) do |score, dc|
+      next score if (res = dc.result)  == "pass"
+
+      score.send(
+        res == "correct" ? :+ : :-, dc.normalized_clue_value)
     end
-    score
   end
 
   def max_possible_score
