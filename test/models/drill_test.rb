@@ -29,4 +29,9 @@ class DrillTest < ActiveSupport::TestCase
     @drill.save
     assert_equal 1, @drill.correct_count
   end
+
+  # TODO: might wanna do DrillStats first.
+  # test "coryat score" do
+  #   @drill = drills(:one)
+  # end
 end
