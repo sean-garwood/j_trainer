@@ -68,7 +68,7 @@ class Drill < ApplicationRecord
   end
 
   def coryat_score
-    drill_clues.reduce(0) do |score, dc|
+    drill_clues.includes([ :clue ]).reduce(0) do |score, dc|
       next score if (res = dc.result)  == "pass"
 
       score.send(
