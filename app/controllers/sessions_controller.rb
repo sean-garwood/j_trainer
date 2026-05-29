@@ -13,7 +13,10 @@ class SessionsController < ApplicationController
     if (@user = User.authenticate_by(params.permit(:email_address, :password)))
       start_new_session_for @user
       redirect_to after_authentication_url
+      # flash.alert = nil
     else
+      # TODO: clear flash after unsuccessful login
+      # This message persists after fail/pass auth
       redirect_to new_session_path, alert: "Try another email address or password."
     end
   end
