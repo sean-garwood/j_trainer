@@ -1,4 +1,7 @@
 <div class="h-[calc(100dvh-4rem)] overflow-hidden flex flex-col">
+  <%# Toast overlay: fixed position so it floats above content %>
+  <div id="drill_toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-50"></div>
+
   <%# Filters bar (compact, only if present) %>
   <div class="px-4 pt-2">
     <%= render "active_filters", drill: @drill %>
@@ -24,10 +27,32 @@
   <div class="shrink-0 px-4 py-2 bg-gray-100 border-t border-gray-300">
     <div class="flex justify-center items-center gap-4">
       <%= render "stats", drill: @drill %>
-      <%= button_to "End Drill", end_drills_path,
-                    method: :post,
-                    form: { data: { turbo_confirm: "Are you sure you want to end this drill?" } },
-                    class: "px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors" %>
+      <div data-controller="confirm-dialog"
+           data-action="keydown@window->confirm-dialog#keydown">
+        <button type="button"
+                data-action="confirm-dialog#show"
+                class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+          End Drill
+        </button>
+        <div data-confirm-dialog-target="dialog"
+             class="hidden fixed inset-0 z-50 flex items-center justify-center">
+          <div class="fixed inset-0 bg-black/50" data-action="click->confirm-dialog#hide"></div>
+          <div class="relative bg-white rounded-xl shadow-2xl p-6 max-w-sm mx-4">
+            <p class="text-lg font-semibold text-gray-900 mb-2">End Drill?</p>
+            <p class="text-gray-600 mb-6">Your progress has been saved. You can review your results after ending.</p>
+            <div class="flex gap-3 justify-end">
+              <button type="button"
+                      data-action="confirm-dialog#hide"
+                      class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+                Cancel
+              </button>
+              <%= button_to "End Drill", end_drills_path,
+                            method: :post,
+                            class: "px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors" %>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
