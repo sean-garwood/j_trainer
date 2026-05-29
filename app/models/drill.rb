@@ -8,6 +8,7 @@ class Drill < ApplicationRecord
   # TODO: add columns to the drills table to persist these values
   # could also create a separate DrillStats model if needed
 
+  # TODO: DrillStats model
   def stats
     {
       correct: correct_count,
