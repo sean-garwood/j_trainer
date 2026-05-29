@@ -1,8 +1,9 @@
-import { Application } from "@hotwired/stimulus"
+import { Application } from "@hotwired/stimulus";
 
-const application = Application.start()
+const application = Application.start();
+const env = document.body.getAttribute("data-rails-env");
 
-application.debug = process.env.NODE_ENV === "development";
-window.Stimulus   = application
+application.debug = env === "development" ? true : false;
+window.Stimulus = application;
 
-export { application }
+export { application };
