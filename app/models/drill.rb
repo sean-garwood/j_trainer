@@ -26,6 +26,7 @@ class Drill < ApplicationRecord
     "#{(correct_count.to_f / clues_seen_count * 100).round(2)}%"
   end
 
+  # OPTIMIZE: preload/includes to load once
   def filtered_clues
     scope = Clue.where.not(round: 3) # Exclude Final Jeopardy
 
@@ -42,7 +43,9 @@ class Drill < ApplicationRecord
     scope
   end
 
+  # OPTIMIZE
   def fetch_clue
+    # OPTIMIZE: Do this once at startup, del id from pool as drill progresses.
     pool = unseen_clue_ids
     return nil if pool.empty?
 

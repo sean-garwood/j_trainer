@@ -4,7 +4,8 @@ require "rails/test_help"
 
 module ActiveSupport
   class TestCase
-    parallelize(workers: :number_of_processors)
+    # threshold: 2 ensures parallelization when suite has < 50 tests
+    parallelize(workers: :number_of_processors, threshold: 2)
 
     # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
     fixtures :all

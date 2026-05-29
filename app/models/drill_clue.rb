@@ -1,7 +1,10 @@
 class DrillClue < ApplicationRecord
   belongs_to :drill
   belongs_to :clue
-  # https://edgeapi.rubyonrails.org/classes/ActiveRecord/DelegatedType.html
+
+  # TODO:
+  #  delegate :correct_response, :normalized_clue_value, :result to: :clue
+  #  see https://edgeapi.rubyonrails.org/classes/ActiveRecord/DelegatedType.html
   delegate :correct_response, to: :clue
 
   enum :result, { incorrect: -1, pass: 0, correct: 1 }
@@ -30,10 +33,7 @@ class DrillClue < ApplicationRecord
     def exact_match?(correct_response)
       return false if response.blank?
 
-      # Extract answer from "What is X?" format if present
       answer_text = strip_pronouns(correct_response)
-
-      # Normalize both strings: downcase, remove punctuation, trim
       normalized_response = normalize_text(response)
       normalized_answer = normalize_text(answer_text)
 
