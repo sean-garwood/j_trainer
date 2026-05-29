@@ -20,6 +20,9 @@ class DrillCluesController < ApplicationController
         # FIXIT: duplicate code with DrillController#train
         # Decide which place is best for this logic
 
+        # Preserve the just-saved drill_clue for toast feedback
+        @previous_drill_clue = @drill_clue
+
         # OPTIMIZE: @drill.drill_clues.build?
         # Prepare next drill clue (unsaved)
         @drill_clue = DrillClue.new(drill: @drill, clue: @clue)

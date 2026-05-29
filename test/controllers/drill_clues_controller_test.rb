@@ -96,6 +96,56 @@ class DrillCluesControllerTest < ActionDispatch::IntegrationTest
     assert_match(/drill_clue_frame/, response.body)
   end
 
+  test "turbo_stream response includes correct toast for correct answer" do
+    post drill_drill_clues_path(@drill), params: {
+      drill_clue: {
+        clue_id: @clue.id,
+        response: @clue.correct_response,
+        response_time: 1.0
+      }
+    }, as: :turbo_stream
+
+    assert_response :success
+    # Should contain a toast update targeting drill_toast
+    assert_match(/drill_toast/, response.body)
+    assert_match(/Correct/, response.body)
+    assert_match(/bg-green/, response.body)
+  end
+
+  test "turbo_stream response includes incorrect toast for wrong answer" do
+    post drill_drill_clues_path(@drill), params: {
+      drill_clue: {
+        clue_id: @clue.id,
+        response: "totally wrong",
+        response_time: 1.0
+      }
+    }, as: :turbo_stream
+
+    assert_response :success
+    assert_match(/drill_toast/, response.body)
+    assert_match(/Incorrect/, response.body)
+    assert_match(/bg-red/, response.body)
+    # Should show the correct answer
+    assert_match(/Jordan/, response.body)
+  end
+
+  test "turbo_stream response includes pass toast for pass" do
+    post drill_drill_clues_path(@drill), params: {
+      drill_clue: {
+        clue_id: @clue.id,
+        response: "pass",
+        response_time: 0
+      }
+    }, as: :turbo_stream
+
+    assert_response :success
+    assert_match(/drill_toast/, response.body)
+    assert_match(/Passed/, response.body)
+    assert_match(/bg-gray/, response.body)
+    # Should show the correct answer
+    assert_match(/Jordan/, response.body)
+  end
+
   private
 
   def sign_in(user)
