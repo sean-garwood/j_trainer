@@ -1,6 +1,4 @@
 module ApplicationHelper
-  include Pagy::Frontend
-
   # devise-style alias
   def current_user
     Current.user

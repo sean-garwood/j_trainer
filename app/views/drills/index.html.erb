@@ -108,8 +108,8 @@
     <div class="flex items-center justify-between px-4 py-3 bg-white rounded-lg shadow sm:px-6">
       <div class="flex-1 flex justify-between sm:hidden">
         <!-- Mobile pagination -->
-        <% if @pagy.prev %>
-          <%= link_to "Previous", drills_path(page: @pagy.prev),
+        <% if @pagy.previous %>
+          <%= link_to "Previous", drills_path(page: @pagy.previous),
               class: "relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
         <% else %>
           <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-400 bg-gray-100 cursor-not-allowed">
@@ -139,10 +139,7 @@
         </div>
         <div>
           <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-            <%== pagy_nav(@pagy,
-              link_extra: 'class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"',
-              page_link_extra: 'class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"'
-            ) %>
+            <%== @pagy.series_nav %>
           </nav>
         </div>
       </div>
