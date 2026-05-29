@@ -6,15 +6,17 @@ class DrillClue < ApplicationRecord
   #  delegate :correct_response, :normalized_clue_value, :result to: :clue
   #  see https://edgeapi.rubyonrails.org/classes/ActiveRecord/DelegatedType.html
   delegate :correct_response, to: :clue
+  delegate :normalized_clue_value, to: :clue
 
   enum :result, { incorrect: -1, pass: 0, correct: 1 }
 
-  before_save :set_result
+  before_save :judge_response
+
   after_commit :update_drill_counts
 
 
   private
-    def set_result
+    def judge_response
       self.result = if response_matches_correct_response?
         :correct
       elsif response_indicates_pass?

@@ -8,6 +8,7 @@ class Drill < ApplicationRecord
   # TODO: add columns to the drills table to persist these values
   # could also create a separate DrillStats model if needed
 
+  # TODO: DrillStats model
   def stats
     {
       correct: correct_count,
@@ -67,12 +68,12 @@ class Drill < ApplicationRecord
   end
 
   def coryat_score
-    score = 0
-    drill_clues.includes(:clue).find_each do |dc|
-      score = score.send(
-        dc.result == "correct" ? :+ : :-, dc.clue.normalized_clue_value)
+    drill_clues.includes([ :clue ]).reduce(0) do |score, dc|
+      next score if (res = dc.result)  == "pass"
+
+      score.send(
+        res == "correct" ? :+ : :-, dc.normalized_clue_value)
     end
-    score
   end
 
   def max_possible_score
