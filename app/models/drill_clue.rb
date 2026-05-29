@@ -10,12 +10,13 @@ class DrillClue < ApplicationRecord
 
   enum :result, { incorrect: -1, pass: 0, correct: 1 }
 
-  before_save :set_result
+  before_save :judge_response
+
   after_commit :update_drill_counts
 
 
   private
-    def set_result
+    def judge_response
       self.result = if response_matches_correct_response?
         :correct
       elsif response_indicates_pass?
