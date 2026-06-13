@@ -40,7 +40,7 @@ class DrillClueTest < ActiveSupport::TestCase
     assert drill_clue.pass?, "Blank response should be marked as pass"
   end
 
-  test "correctly identifies pass from 'pass' response" do
+  test "'pass' is NOT a pass — it is judged as a normal response" do
     drill_clue = DrillClue.new(
       drill: drills(:one),
       clue: clues(:one),
@@ -49,7 +49,7 @@ class DrillClueTest < ActiveSupport::TestCase
     )
     drill_clue.save
 
-    assert drill_clue.pass?, "'pass' response should be marked as pass"
+    assert_not drill_clue.pass?, "'pass' should not be treated as a pass"
   end
 
   test "correctly identifies pass from 'p' response" do
@@ -132,5 +132,63 @@ class DrillClueTest < ActiveSupport::TestCase
     drill_clue.save
 
     assert drill_clue.correct?, "Should match answer without 'Who is' prefix"
+  end
+
+  test "persists score and reason on save" do
+    drill_clue = DrillClue.new(
+      drill: drills(:one),
+      clue: clues(:one),
+      response: "jordan",
+      response_time: 1.0
+    )
+    drill_clue.save
+
+    assert drill_clue.correct?
+    assert_not_nil drill_clue.score
+    assert_not_nil drill_clue.reason
+  end
+
+  test "token subset: last name matches full name" do
+    clue = clues(:two)  # correct_response: "Who is Abraham Lincoln?"
+
+    drill_clue = DrillClue.new(
+      drill: drills(:one),
+      clue: clue,
+      response: "Lincoln",
+      response_time: 1.0
+    )
+    drill_clue.save
+
+    assert drill_clue.correct?, "Last name should match full name"
+    assert_equal "token_subset", drill_clue.reason
+  end
+
+  test "typo tolerance: minor misspelling accepted" do
+    clue = clues(:two)  # correct_response: "Who is Abraham Lincoln?"
+
+    drill_clue = DrillClue.new(
+      drill: drills(:one),
+      clue: clue,
+      response: "Abrham Lincoln",
+      response_time: 1.0
+    )
+    drill_clue.save
+
+    assert drill_clue.correct?, "Minor misspelling should be accepted"
+    assert_equal "spelling", drill_clue.reason
+  end
+
+  test "short substring does not falsely match" do
+    clue = clues(:two)  # correct_response: "Who is Abraham Lincoln?"
+
+    drill_clue = DrillClue.new(
+      drill: drills(:one),
+      clue: clue,
+      response: "ham",
+      response_time: 1.0
+    )
+    drill_clue.save
+
+    assert drill_clue.incorrect?, "'ham' should not match 'Abraham Lincoln'"
   end
 end

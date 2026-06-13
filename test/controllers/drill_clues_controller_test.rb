@@ -37,11 +37,11 @@ class DrillCluesControllerTest < ActionDispatch::IntegrationTest
     assert drill_clue.incorrect?, "Should be marked as incorrect"
   end
 
-  test "should create drill_clue with pass" do
+  test "should create drill_clue with pass using 'p'" do
     post drill_drill_clues_path(@drill), params: {
       drill_clue: {
         clue_id: @clue.id,
-        response: "pass",
+        response: "p",
         response_time: 0
       }
     }, as: :turbo_stream
@@ -133,7 +133,7 @@ class DrillCluesControllerTest < ActionDispatch::IntegrationTest
     post drill_drill_clues_path(@drill), params: {
       drill_clue: {
         clue_id: @clue.id,
-        response: "pass",
+        response: "p",
         response_time: 0
       }
     }, as: :turbo_stream

@@ -14,51 +14,19 @@ class DrillClue < ApplicationRecord
 
   after_commit :update_drill_counts
 
-
   private
+
     def judge_response
-      self.result = if response_matches_correct_response?
-        :correct
-      elsif response_indicates_pass?
-        :pass
-      else
-        :incorrect
-      end
-    end
-
-    # TODO: improve matching logic
-    #   accept last name only for person answers (except Jones, etc.)
-    def response_matches_correct_response?
-      exact_match?(correct_response)
-    end
-
-    def exact_match?(correct_response)
-      return false if response.blank?
-
-      answer_text = strip_pronouns(correct_response)
-      normalized_response = normalize_text(response)
-      normalized_answer = normalize_text(answer_text)
-
-      # Check if response contains the key answer terms (bidirectional)
-      normalized_answer.include?(normalized_response) ||
-        normalized_response.include?(normalized_answer)
-    end
-
-    def response_indicates_pass?
-      response.blank? ||
-      normalize_text(response).match?(/\Ap(?:ass)?\z/i)
+      judgment = ResponseJudge.call(
+        user_response: response,
+        correct_response: correct_response
+      )
+      self.result = judgment.verdict
+      self.score = judgment.score
+      self.reason = judgment.reason
     end
 
     def update_drill_counts
       drill.update_counts!
-    end
-
-    # TODO: move to module
-    def normalize_text(text)
-      text.downcase.gsub(/[^a-z0-9\s]/, "").strip
-    end
-
-    def strip_pronouns(answer)
-      answer.downcase.gsub(/\A(what|who|where|when|why) is\s+/, "").gsub(/\??\z/, "").strip
     end
 end
