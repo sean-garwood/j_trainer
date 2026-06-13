@@ -119,12 +119,38 @@ class ResponseJudgeTest < ActiveSupport::TestCase
     assert_equal :correct, result.verdict
   end
 
+  # --- Per-token spelling tolerance ---
+
+  test "last name with typo matches via per-token spelling" do
+    result = ResponseJudge.call(user_response: "Hemmingway", correct_response: "Who is Ernest Hemingway?")
+    assert_equal :correct, result.verdict
+    assert_equal :per_token_spelling, result.reason
+    assert result.score >= 0.85
+  end
+
+  test "misspelled last name only matches full name" do
+    result = ResponseJudge.call(user_response: "Shakespear", correct_response: "Who is William Shakespeare?")
+    assert_equal :correct, result.verdict
+    assert_equal :per_token_spelling, result.reason
+  end
+
+  test "multiple tokens with typos accepted via per-token spelling" do
+    result = ResponseJudge.call(user_response: "Earnest Hemmingway", correct_response: "Who is Ernest Hemingway?")
+    assert_equal :correct, result.verdict
+    assert_equal :per_token_spelling, result.reason
+  end
+
+  test "per-token spelling rejects short tokens below min length" do
+    result = ResponseJudge.call(user_response: "xx", correct_response: "Who is Abraham Lincoln?")
+    assert_equal :incorrect, result.verdict
+  end
+
   # --- Spelling tolerance (Levenshtein) ---
 
   test "minor misspelling accepted" do
     result = ResponseJudge.call(user_response: "Abrham Lincoln", correct_response: "Who is Abraham Lincoln?")
     assert_equal :correct, result.verdict
-    assert_equal :spelling, result.reason
+    assert_includes %i[spelling per_token_spelling], result.reason
     assert result.score >= 0.85
   end
 
