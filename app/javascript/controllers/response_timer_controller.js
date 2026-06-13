@@ -5,7 +5,6 @@ export default class extends Controller {
     // TODO: unmagic defaults
     static values = {
         maxResponseTime: { type: Number, default: 15 },
-        maxBuzzTime: { type: Number, default: 5 },
     };
 
     get now() {
@@ -15,7 +14,6 @@ export default class extends Controller {
     connect() {
         this.clueDisplayTime = this.now;
         this.responseTime = null;
-        this.maxBuzzTime = this.maxBuzzTimeValue;
         this.maxResponseTime = this.maxResponseTimeValue;
         this.startResponseCountdown();
     }
