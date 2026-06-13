@@ -1,6 +1,6 @@
 <div class="flex flex-row gap-4 items-center">
   <% if current_user? %>
     <span class="text-blue-200">Hello, <%= current_user.email_address %></span>
-    <%= link_to "Logout", session_path, data: {"turbo-method": :delete}, class: "text-red-300 hover:text-red-100 font-medium transition-colors" %>
+    <%= link_to "Sign out", sign_in_path, data: {"turbo-method": :delete}, class: "text-red-300 hover:text-red-100 font-medium transition-colors" %>
   <% end %>
 </div>

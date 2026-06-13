@@ -149,6 +149,6 @@ class DrillCluesControllerTest < ActionDispatch::IntegrationTest
   private
 
   def sign_in(user)
-    post session_url, params: { email_address: user.email_address, password: "password" }
+    post sign_in_url, params: { email_address: user.email_address, password: "password" }
   end
 end
