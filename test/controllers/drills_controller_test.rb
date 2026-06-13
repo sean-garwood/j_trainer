@@ -3,7 +3,7 @@ require "test_helper"
 class DrillsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @user = users(:one)
-    post session_path, params: { email_address: @user.email_address, password: "password" }
+    post sign_in_path, params: { email_address: @user.email_address, password: "password" }
   end
   test "gets drill index" do
     get drills_path
