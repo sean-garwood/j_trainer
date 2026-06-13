@@ -81,3 +81,6 @@ gem "cancancan"
 gem "pagy", "~> 43.5"
 
 gem "csv", "~> 3.3"
+
+# Levenshtein distance for fuzzy response matching
+gem "amatch"

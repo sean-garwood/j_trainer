@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_21_212948) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_13_025311) do
   create_table "clues", force: :cascade do |t|
     t.string "air_date"
     t.text "category"
@@ -30,9 +30,11 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_21_212948) do
     t.integer "clue_id", null: false
     t.datetime "created_at", null: false
     t.integer "drill_id", null: false
+    t.string "reason"
     t.string "response"
     t.float "response_time"
     t.integer "result"
+    t.float "score"
     t.datetime "updated_at", null: false
     t.index ["clue_id"], name: "index_drill_clues_on_clue_id"
     t.index ["drill_id"], name: "index_drill_clues_on_drill_id"
