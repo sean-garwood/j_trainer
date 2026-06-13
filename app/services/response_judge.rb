@@ -20,6 +20,8 @@ class ResponseJudge
       Result.new(:correct, 1.0, :exact)
     elsif token_subset?
       Result.new(:correct, 1.0, :token_subset)
+    elsif (r = per_token_spelling_ratio) && r >= SPELLING_RATIO_THRESHOLD
+      Result.new(:correct, r, :per_token_spelling)
     elsif (r = spelling_ratio) >= SPELLING_RATIO_THRESHOLD
       Result.new(:correct, r, :spelling)
     else
@@ -46,6 +48,26 @@ class ResponseJudge
 
     min_len = [ 3, c_tokens.map(&:length).min ].min
     u_tokens.all? { |t| t.length >= min_len && c_tokens.include?(t) }
+  end
+
+  def per_token_spelling_ratio
+    u_tokens = user.split
+    c_tokens = correct.split
+    return nil if u_tokens.empty? || c_tokens.empty?
+
+    min_len = [ 3, c_tokens.map(&:length).min ].min
+    return nil unless u_tokens.all? { |t| t.length >= min_len }
+
+    ratios = u_tokens.map do |ut|
+      c_tokens.map { |ct| token_ratio(ut, ct) }.max
+    end
+
+    ratios.min
+  end
+
+  def token_ratio(a, b)
+    distance = Amatch::Levenshtein.new(a).match(b)
+    1.0 - (distance.to_f / [ a.length, b.length ].max)
   end
 
   def spelling_ratio
