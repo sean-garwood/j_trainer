@@ -29,6 +29,9 @@
               <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Accuracy
               </th>
+              <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Coryat
+              </th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
@@ -62,6 +65,9 @@
                     <%= drill.accuracy %>
                   </span>
                 </td>
+                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-semibold text-gray-900">
+                  <%= number_with_delimiter(drill.coryat_score) %>
+                </td>
               </tr>
             <% end %>
             <!-- Summary Row -->
@@ -70,6 +76,7 @@
               total_incorrect = @drills.sum(&:incorrect_count)
               total_pass = @drills.sum(&:pass_count)
               total_seen = @drills.sum(&:clues_seen_count)
+              total_coryat = @drills.sum(&:coryat_score)
               avg_accuracy = total_seen > 0 ? ((total_correct.to_f / total_seen) * 100).round(2) : 0
             %>
             <tr class="bg-blue-50 font-semibold">
@@ -98,6 +105,9 @@
                 <span class="<%= avg_accuracy >= 70 ? 'text-green-700' : avg_accuracy >= 50 ? 'text-yellow-700' : 'text-red-700' %>">
                   <%= avg_accuracy %>%
                 </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-gray-900">
+                <%= number_with_delimiter(total_coryat) %>
               </td>
             </tr>
           </tbody>
