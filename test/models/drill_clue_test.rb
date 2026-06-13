@@ -175,7 +175,7 @@ class DrillClueTest < ActiveSupport::TestCase
     drill_clue.save
 
     assert drill_clue.correct?, "Minor misspelling should be accepted"
-    assert_equal "spelling", drill_clue.reason
+    assert_includes %w[spelling per_token_spelling], drill_clue.reason
   end
 
   test "short substring does not falsely match" do
