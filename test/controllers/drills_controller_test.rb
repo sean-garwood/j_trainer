@@ -69,7 +69,7 @@ class DrillsControllerTest < ActionDispatch::IntegrationTest
     drill_id = session[:current_drill_id]
 
     @drill = Drill.find(drill_id)
-    @drill.drill_clues.create!(clue: clues(:one), response: "Test", response_time: 2.0)
+    @drill.drill_clues.create!(clue: clues(:one), response: "Test", response_time: 1.0)
     post end_drills_path
     follow_redirect!
 
@@ -146,8 +146,9 @@ class DrillsControllerTest < ActionDispatch::IntegrationTest
 
   test "index displays correct coryat scores for drills" do
     drill = drills(:one)
+    formatted_coryat = "$#{ActionController::Base.helpers.number_with_delimiter(drill.coryat_score)}"
     get drills_path
     assert_response :success
-    assert_select "tbody>tr:first-child td:last-child", text: drill.coryat_score.to_s
+    assert_select "tbody>tr:first-child td:last-child", text: formatted_coryat
   end
 end
