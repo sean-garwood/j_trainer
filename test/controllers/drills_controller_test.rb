@@ -143,4 +143,11 @@ class DrillsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "1", drill.filters["round"]
     assert_equal [ 200, 400 ], drill.filters["clue_values"]
   end
+
+  test "index displays correct coryat scores for drills" do
+    drill = drills(:one)
+    get drills_path
+    assert_response :success
+    assert_select "tbody>tr:first-child td:last-child", text: drill.coryat_score.to_s
+  end
 end
