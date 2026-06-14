@@ -65,8 +65,10 @@
                     <%= drill.accuracy %>
                   </span>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-semibold text-gray-900">
-                  <%= number_with_delimiter(drill.coryat_score) %>
+                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-semibold">
+                  <span class="<%= drill.correct_count.to_f / drill.clues_seen_count >= 0.7 ? 'text-green-600' : drill.correct_count.to_f / drill.clues_seen_count >= 0.5 ? 'text-yellow-600' : 'text-red-600' %>">
+                    <%= "$#{number_with_delimiter(drill.coryat_score)}" %>
+                  </span>
                 </td>
               </tr>
             <% end %>
@@ -106,8 +108,10 @@
                   <%= avg_accuracy %>%
                 </span>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-gray-900">
-                <%= number_with_delimiter(total_coryat) %>
+              <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold">
+                <span class="<%= avg_accuracy >= 70 ? 'text-green-700' : avg_accuracy >= 50 ? 'text-yellow-700' : 'text-red-700' %>">
+                  <%= "$#{number_with_delimiter(total_coryat)}" %>
+                </span>
               </td>
             </tr>
           </tbody>
