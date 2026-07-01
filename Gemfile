@@ -72,7 +72,7 @@ end
 
 gem "tailwindcss-ruby", "~> 4.3"
 
-gem "tailwindcss-rails", "~> 4.2"
+gem "tailwindcss-rails", "~> 4.6"
 
 # Authenticate resources available to users
 gem "cancancan"
