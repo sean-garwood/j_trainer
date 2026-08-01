@@ -78,7 +78,7 @@ gem "tailwindcss-rails", "~> 4.2"
 gem "cancancan"
 
 # Pagination
-gem "pagy", "~> 43.5"
+gem "pagy", "~> 43.6"
 
 gem "csv", "~> 3.3"
 
