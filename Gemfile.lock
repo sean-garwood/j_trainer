@@ -233,7 +233,7 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     ostruct (0.6.3)
-    pagy (43.5.6)
+    pagy (43.6.2)
       json
       uri
       yaml
@@ -455,7 +455,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
-  pagy (~> 43.5)
+  pagy (~> 43.6)
   propshaft
   puma (>= 5.0)
   rails (~> 8.1.3)
