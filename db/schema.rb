@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema[8.1].define(version: 2026_06_13_025311) do
   create_table "clues", force: :cascade do |t|
-    t.string "air_date"
+    t.text "air_date"
     t.text "category"
     t.text "clue_text"
     t.integer "clue_value"

@@ -30,6 +30,15 @@ class DrillTest < ActiveSupport::TestCase
     assert_equal 1, @drill.correct_count
   end
 
+  test "deleting drill does not delete the clue" do
+    @drill = drills :two
+    @clues = @drill.clues
+    assert some_clue_id = @clues.first.id
+    @drill.destroy
+    clue = Clue.find(some_clue_id)
+    assert clue, "Clue gone"
+  end
+
   # TODO: might wanna do DrillStats first.
   # test "coryat score" do
   #   @drill = drills(:one)

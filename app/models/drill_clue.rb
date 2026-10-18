@@ -27,6 +27,6 @@ class DrillClue < ApplicationRecord
     end
 
     def update_drill_counts
-      drill.update_counts!
+      drill.update_counts! unless destroyed?
     end
 end

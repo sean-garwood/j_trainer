@@ -48,7 +48,7 @@ group :development, :test do
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", ">= 7.1.1", require: false
 
-  gem "rubocop", "~> 1.87"
+  gem "rubocop", "~> 1.88"
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
