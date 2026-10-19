@@ -41,10 +41,12 @@ class DrillTest < ActiveSupport::TestCase
 
   test "stats coryat is the signed sum of normalized values" do
     drill = Drill.create!(user: users(:one))
+    low = clues(:one).normalized_clue_value
+    high = clues(:two).normalized_clue_value
     add_results(drill, one: :correct, two: :incorrect, three: :correct, new: :pass)
 
     stats = drill.stats
-    assert_equal 200 - 400 + 400, stats.coryat
+    assert_equal low - high + high, stats.coryat
     assert_equal [ 4, 2, 1, 1 ], [ stats.seen, stats.correct, stats.incorrect, stats.passed ]
     assert_equal 50.0, stats.accuracy
   end
@@ -53,8 +55,11 @@ class DrillTest < ActiveSupport::TestCase
     drill = Drill.create!(user: users(:one))
     add_results(drill, old: :correct)
 
-    assert_equal 200, drill.stats.max_possible
-    assert_equal 200, drill.stats.coryat
+    # old is a pre-2001 clue; its normalized value is what counts
+    normalized = clues(:old).normalized_clue_value
+    assert_includes ALL_CLUE_VALUES, normalized
+    assert_equal normalized, drill.stats.max_possible
+    assert_equal normalized, drill.stats.coryat
   end
 
   test "stats for a drill without clues are all zero" do
