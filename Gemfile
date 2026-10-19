@@ -55,6 +55,7 @@ group :development, :test do
 
   gem "guard"
   gem "guard-minitest"
+  gem "minitest-mock", "~> 5.27" # Minitest 6 split stub out of core
   gem "bullet", "~> 8.3"
 end
 
