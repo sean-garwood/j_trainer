@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 ruby ">= 3.4.1"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.1.3"
+gem "rails", "~> 8.1.4"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use sqlite3 as the database for Active Record
@@ -48,14 +48,14 @@ group :development, :test do
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", ">= 7.1.1", require: false
 
-  gem "rubocop", "~> 1.88"
+  gem "rubocop", "~> 1.92"
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
   gem "guard"
   gem "guard-minitest"
-  gem "bullet", "~> 8.1"
+  gem "bullet", "~> 8.3"
 end
 
 group :development do
@@ -72,13 +72,13 @@ end
 
 gem "tailwindcss-ruby", "~> 4.3"
 
-gem "tailwindcss-rails", "~> 4.2"
+gem "tailwindcss-rails", "~> 4.6"
 
 # Authenticate resources available to users
 gem "cancancan"
 
 # Pagination
-gem "pagy", "~> 43.5"
+gem "pagy", "~> 43.7"
 
 gem "csv", "~> 3.3"
 
