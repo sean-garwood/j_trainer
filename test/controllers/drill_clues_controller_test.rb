@@ -146,6 +146,20 @@ class DrillCluesControllerTest < ActionDispatch::IntegrationTest
     assert_match(/Jordan/, response.body)
   end
 
+  test "turbo_stream response replaces drill_stats without nesting" do
+    post drill_drill_clues_path(@drill), params: {
+      drill_clue: {
+        clue_id: @clue.id,
+        response: @clue.correct_response,
+        response_time: 1.0
+      }
+    }, as: :turbo_stream
+
+    assert_response :success
+    assert_equal 1, response.body.scan('id="drill_stats"').size
+    assert_match(/action="replace" target="drill_stats"/, response.body)
+  end
+
   private
 
   def sign_in(user)

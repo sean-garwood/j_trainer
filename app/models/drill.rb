@@ -5,20 +5,27 @@ class Drill < ApplicationRecord
 
   after_save :update_counts!
 
-  # TODO: add columns to the drills table to persist these values
-  # could also create a separate DrillStats model if needed
+  Stats = Data.define(:seen, :correct, :incorrect, :passed, :coryat, :max_possible) do
+    # counts and values are keyed by result name; coryat is signed by result, so passes drop out
+    def self.from_tallies(counts, values)
+      new(
+        seen: counts.values.sum,
+        correct: counts.fetch("correct", 0),
+        incorrect: counts.fetch("incorrect", 0),
+        passed: counts.fetch("pass", 0),
+        coryat: values.fetch("correct", 0) - values.fetch("incorrect", 0),
+        max_possible: values.values.sum
+      )
+    end
 
-  # TODO: DrillStats model
+    def accuracy = seen.zero? ? 0.0 : (correct * 100.0 / seen).round(2)
+  end
+
   def stats
-    {
-      correct: correct_count,
-      incorrect: incorrect_count,
-      pass: pass_count,
-      seen: clues_seen_count,
-      accuracy: accuracy,
-      coryat_score: coryat_score,
-      max_possible_score: max_possible_score
-    }
+    Stats.from_tallies(
+      drill_clues.group(:result).count,
+      drill_clues.joins(:clue).group(:result).sum("clues.normalized_clue_value")
+    )
   end
 
   def accuracy
@@ -65,19 +72,6 @@ class Drill < ApplicationRecord
       pass_count: counts["pass"] || 0,
       updated_at: Time.current
     )
-  end
-
-  def coryat_score
-    drill_clues.includes([ :clue ]).reduce(0) do |score, dc|
-      next score if (res = dc.result)  == "pass"
-
-      score.send(
-        res == "correct" ? :+ : :-, dc.normalized_clue_value)
-    end
-  end
-
-  def max_possible_score
-    drill_clues.includes(:clue).sum(:clue_value)
   end
 
   private

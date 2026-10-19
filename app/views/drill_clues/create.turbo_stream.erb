@@ -24,23 +24,4 @@
                drill_clue: @drill_clue %>
   <% end %>
 <% end %>
-<%= turbo_stream.update "drill_stats" do %>
-  <div class="bg-white rounded-lg shadow p-4 flex gap-4 text-sm">
-    <div class="text-center">
-      <div class="font-bold text-green-600"><%= @drill.correct_count %></div>
-      <div class="text-gray-600">Correct</div>
-    </div>
-    <div class="text-center">
-      <div class="font-bold text-red-600"><%= @drill.incorrect_count %></div>
-      <div class="text-gray-600">Incorrect</div>
-    </div>
-    <div class="text-center">
-      <div class="font-bold text-gray-600"><%= @drill.pass_count %></div>
-      <div class="text-gray-600">Passed</div>
-    </div>
-    <div class="text-center">
-      <div class="font-bold text-blue-600"><%= @drill.clues_seen_count %></div>
-      <div class="text-gray-600">Seen</div>
-    </div>
-  </div>
-<% end %>
+<%= turbo_stream.replace "drill_stats", partial: "drills/stats", locals: { stats: @drill.stats } %>

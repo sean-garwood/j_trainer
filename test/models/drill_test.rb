@@ -39,8 +39,43 @@ class DrillTest < ActiveSupport::TestCase
     assert clue, "Clue gone"
   end
 
-  # TODO: might wanna do DrillStats first.
-  # test "coryat score" do
-  #   @drill = drills(:one)
-  # end
+  test "stats coryat is the signed sum of normalized values" do
+    drill = Drill.create!(user: users(:one))
+    low = clues(:one).normalized_clue_value
+    high = clues(:two).normalized_clue_value
+    add_results(drill, one: :correct, two: :incorrect, three: :correct, new: :pass)
+
+    stats = drill.stats
+    assert_equal low - high + high, stats.coryat
+    assert_equal [ 4, 2, 1, 1 ], [ stats.seen, stats.correct, stats.incorrect, stats.passed ]
+    assert_equal 50.0, stats.accuracy
+  end
+
+  test "stats max_possible uses normalized clue values" do
+    drill = Drill.create!(user: users(:one))
+    add_results(drill, old: :correct)
+
+    # old is a pre-2001 clue; its normalized value is what counts
+    normalized = clues(:old).normalized_clue_value
+    assert_includes ALL_CLUE_VALUES, normalized
+    assert_equal normalized, drill.stats.max_possible
+    assert_equal normalized, drill.stats.coryat
+  end
+
+  test "stats for a drill without clues are all zero" do
+    stats = Drill.create!(user: users(:one)).stats
+
+    assert_equal Drill::Stats.new(seen: 0, correct: 0, incorrect: 0, passed: 0, coryat: 0, max_possible: 0), stats
+    assert_equal 0.0, stats.accuracy
+  end
+
+  private
+
+    # stubs ResponseJudge to treat the response text as the verdict, so results can be set directly
+    def add_results(drill, results)
+      judge = ->(user_response:, **) { ResponseJudge::Result.new(user_response.to_sym, nil, :stubbed) }
+      ResponseJudge.stub(:call, judge) do
+        results.each { |clue, result| drill.drill_clues.create!(clue: clues(clue), response: result.to_s) }
+      end
+    end
 end
