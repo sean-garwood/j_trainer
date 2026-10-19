@@ -33,6 +33,7 @@
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
             <% @drills.each do |drill| %>
+              <% stats = @stats[drill.id] %>
               <tr class="hover:bg-gray-50 transition-colors">
                 <td class="px-6 py-4 whitespace-nowrap">
                   <%= link_to drill.created_at.localtime.strftime("%Y-%m-%d %H:%M"),
@@ -41,62 +42,56 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    <%= drill.correct_count %>
+                    <%= stats.correct %>
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                    <%= drill.incorrect_count %>
+                    <%= stats.incorrect %>
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                    <%= drill.pass_count %>
+                    <%= stats.passed %>
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-gray-900">
-                  <%= drill.clues_seen_count %>
+                  <%= stats.seen %>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-semibold">
-                  <span class="<%= drill.correct_count.to_f / drill.clues_seen_count >= 0.7 ? 'text-green-600' : drill.correct_count.to_f / drill.clues_seen_count >= 0.5 ? 'text-yellow-600' : 'text-red-600' %>">
-                    <%= drill.accuracy %>
+                  <span class="<%= accuracy_class(stats.accuracy) %>">
+                    <%= "#{stats.accuracy}%" %>
                   </span>
                 </td>
               </tr>
             <% end %>
-            <!-- Summary Row -->
-            <%
-              total_correct = @drills.sum(&:correct_count)
-              total_incorrect = @drills.sum(&:incorrect_count)
-              total_pass = @drills.sum(&:pass_count)
-              total_seen = @drills.sum(&:clues_seen_count)
-              avg_accuracy = total_seen > 0 ? ((total_correct.to_f / total_seen) * 100).round(2) : 0
-            %>
+            <!-- Summary Row: stays in tbody, controller tests count it -->
+            <% totals = current_user.lifetime_stats %>
             <tr class="bg-blue-50 font-semibold">
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                Page Totals
+                All-time Totals
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-200 text-green-900">
-                  <%= total_correct %>
+                  <%= totals.correct %>
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-200 text-red-900">
-                  <%= total_incorrect %>
+                  <%= totals.incorrect %>
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200 text-gray-900">
-                  <%= total_pass %>
+                  <%= totals.passed %>
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">
-                <%= total_seen %>
+                <%= totals.seen %>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold">
-                <span class="<%= avg_accuracy >= 70 ? 'text-green-700' : avg_accuracy >= 50 ? 'text-yellow-700' : 'text-red-700' %>">
-                  <%= avg_accuracy %>%
+                <span class="<%= accuracy_class(totals.accuracy) %>">
+                  <%= "#{totals.accuracy}%" %>
                 </span>
               </td>
             </tr>

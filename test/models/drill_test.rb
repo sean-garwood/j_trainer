@@ -69,13 +69,25 @@ class DrillTest < ActiveSupport::TestCase
     assert_equal 0.0, stats.accuracy
   end
 
-  private
+  test "Stats.by_drill matches per-drill stats and defaults to zero" do
+    drill = Drill.create!(user: users(:one))
+    empty = Drill.create!(user: users(:one))
+    add_results(drill, one: :correct, two: :incorrect, old: :pass)
 
-    # stubs ResponseJudge to treat the response text as the verdict, so results can be set directly
-    def add_results(drill, results)
-      judge = ->(user_response:, **) { ResponseJudge::Result.new(user_response.to_sym, nil, :stubbed) }
-      ResponseJudge.stub(:call, judge) do
-        results.each { |clue, result| drill.drill_clues.create!(clue: clues(clue), response: result.to_s) }
-      end
+    by_drill = Drill::Stats.by_drill(DrillClue.where(drill_id: [ drill.id, empty.id ]))
+    assert_equal drill.stats, by_drill[drill.id]
+    assert_equal empty.stats, by_drill[empty.id]
+  end
+
+  test "Stats.by_drill does not query per drill" do
+    drills = 3.times.map { Drill.create!(user: users(:one)) }
+    drills.each { |d| add_results(d, one: :correct) }
+
+    queries = 0
+    counter = ->(*) { queries += 1 }
+    ActiveSupport::Notifications.subscribed(counter, "sql.active_record") do
+      Drill::Stats.by_drill(DrillClue.where(drill_id: drills.map(&:id)))
     end
+    assert_equal 2, queries, "one count, one sum"
+  end
 end

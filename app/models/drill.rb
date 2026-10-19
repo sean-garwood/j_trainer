@@ -6,6 +6,17 @@ class Drill < ApplicationRecord
   after_save :update_counts!
 
   Stats = Data.define(:seen, :correct, :incorrect, :passed, :coryat, :max_possible) do
+    def self.for(drill_clues)
+      from_tallies(drill_clues.group(:result).count, value_sums(drill_clues.group(:result)))
+    end
+
+    # two queries for any number of drills; drills with no clues get all-zero stats
+    def self.by_drill(drill_clues)
+      counts = nest(drill_clues.group(:drill_id, :result).count)
+      values = nest(value_sums(drill_clues.group(:drill_id, :result)))
+      counts.to_h { |id, tally| [ id, from_tallies(tally, values[id]) ] }.tap { it.default = from_tallies({}, {}) }
+    end
+
     # counts and values are keyed by result name; coryat is signed by result, so passes drop out
     def self.from_tallies(counts, values)
       new(
@@ -18,21 +29,17 @@ class Drill < ApplicationRecord
       )
     end
 
+    def self.value_sums(grouped) = grouped.joins(:clue).sum("clues.normalized_clue_value")
+
+    # {[drill_id, result] => n} -> {drill_id => {result => n}}
+    def self.nest(grouped)
+      grouped.each_with_object(Hash.new { |h, id| h[id] = {} }) { |((id, result), n), nested| nested[id][result] = n }
+    end
+
     def accuracy = seen.zero? ? 0.0 : (correct * 100.0 / seen).round(2)
   end
 
-  def stats
-    Stats.from_tallies(
-      drill_clues.group(:result).count,
-      drill_clues.joins(:clue).group(:result).sum("clues.normalized_clue_value")
-    )
-  end
-
-  def accuracy
-    return "0%" if clues_seen_count.zero?
-
-    "#{(correct_count.to_f / clues_seen_count * 100).round(2)}%"
-  end
+  def stats = Stats.for(drill_clues)
 
   # OPTIMIZE: preload/includes to load once
   def filtered_clues

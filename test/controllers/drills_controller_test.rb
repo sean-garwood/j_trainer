@@ -21,6 +21,29 @@ class DrillsControllerTest < ActionDispatch::IntegrationTest
     new_drill.destroy!
   end
 
+  test "index totals cover all drills, not just the current page" do
+    11.times { add_results(@user.drills.create!, one: :correct) }
+    add_results(@user.drills.create!(created_at: 1.year.ago), two: :incorrect)
+
+    sqls = []
+    collect = ->(*, payload) { sqls << payload[:sql] }
+    ActiveSupport::Notifications.subscribed(collect, "sql.active_record") { get drills_path }
+
+    assert_response :success
+    assert_select "tbody>tr", count: 11 # 10 drills + totals
+    totals = @user.lifetime_stats
+    assert_equal 11, totals.correct
+    assert_select "tbody>tr:last-child", text: /All-time Totals/ do
+      assert_select "td span", text: totals.correct.to_s
+      assert_select "td span", text: totals.incorrect.to_s
+      assert_select "td", text: totals.seen.to_s
+    end
+
+    # count + sum for the page's drills, count + sum for lifetime totals
+    drill_clue_queries = sqls.grep(/FROM "drill_clues"/).grep_v(/\ASELECT COUNT\(\*\) FROM/)
+    assert_equal 4, drill_clue_queries.size
+  end
+
   test "does not show another user's drill" do
     forbidden_drill = drills(:two)
     assert_raises CanCan::AccessDenied do
