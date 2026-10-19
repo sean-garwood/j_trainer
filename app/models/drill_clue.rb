@@ -10,23 +10,6 @@ class DrillClue < ApplicationRecord
 
   enum :result, { incorrect: -1, pass: 0, correct: 1 }
 
-  # result doubles as the coryat sign; FILTER (not SUM(bool)) keeps this portable to Postgres
-  def self.stats
-    result = arel_table[:result]
-    value = Clue.arel_table[:normalized_clue_value]
-    tally = ->(verdict) { Arel.star.count.filter(result.eq(results.fetch(verdict))) }
-    total = ->(expr) { Arel::Nodes::NamedFunction.new("COALESCE", [ expr.sum, 0 ]) }
-
-    joins(:clue).select(
-      Arel.star.count.as("seen"),
-      tally.call(:correct).as("correct"),
-      tally.call(:incorrect).as("incorrect"),
-      tally.call(:pass).as("passed"),
-      total.call(result * value).as("coryat"),
-      total.call(value).as("max_possible")
-    )
-  end
-
   before_save :judge_response
 
   after_commit :update_drill_counts

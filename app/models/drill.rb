@@ -6,12 +6,27 @@ class Drill < ApplicationRecord
   after_save :update_counts!
 
   Stats = Data.define(:seen, :correct, :incorrect, :passed, :coryat, :max_possible) do
-    def self.from(row) = new(**members.index_with { row[it] || 0 })
+    # counts and values are keyed by result name; coryat is signed by result, so passes drop out
+    def self.from_tallies(counts, values)
+      new(
+        seen: counts.values.sum,
+        correct: counts.fetch("correct", 0),
+        incorrect: counts.fetch("incorrect", 0),
+        passed: counts.fetch("pass", 0),
+        coryat: values.fetch("correct", 0) - values.fetch("incorrect", 0),
+        max_possible: values.values.sum
+      )
+    end
+
     def accuracy = seen.zero? ? 0.0 : (correct * 100.0 / seen).round(2)
   end
 
-  # skips the query when stats columns were preloaded onto the drill
-  def stats = Stats.from(has_attribute?(:seen) ? self : drill_clues.stats.take)
+  def stats
+    Stats.from_tallies(
+      drill_clues.group(:result).count,
+      drill_clues.joins(:clue).group(:result).sum("clues.normalized_clue_value")
+    )
+  end
 
   def accuracy
     return "0%" if clues_seen_count.zero?
