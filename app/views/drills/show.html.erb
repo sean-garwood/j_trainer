@@ -12,19 +12,19 @@
     <%# Stats Grid %>
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
       <div class="bg-white rounded-lg shadow p-4 text-center">
-        <div class="text-2xl font-bold text-green-600"><%= stats[:correct] %></div>
+        <div class="text-2xl font-bold text-green-600"><%= stats.correct %></div>
         <div class="text-sm text-gray-500">Correct</div>
       </div>
       <div class="bg-white rounded-lg shadow p-4 text-center">
-        <div class="text-2xl font-bold text-red-600"><%= stats[:incorrect] %></div>
+        <div class="text-2xl font-bold text-red-600"><%= stats.incorrect %></div>
         <div class="text-sm text-gray-500">Incorrect</div>
       </div>
       <div class="bg-white rounded-lg shadow p-4 text-center">
-        <div class="text-2xl font-bold text-gray-500"><%= stats[:pass] %></div>
+        <div class="text-2xl font-bold text-gray-500"><%= stats.passed %></div>
         <div class="text-sm text-gray-500">Passed</div>
       </div>
       <div class="bg-white rounded-lg shadow p-4 text-center">
-        <div class="text-2xl font-bold text-blue-600"><%= stats[:seen] %></div>
+        <div class="text-2xl font-bold text-blue-600"><%= stats.seen %></div>
         <div class="text-sm text-gray-500">Seen</div>
       </div>
     </div>
@@ -33,24 +33,24 @@
     <div class="bg-white rounded-lg shadow p-6 mb-8 flex flex-wrap justify-around gap-4">
       <div class="text-center">
         <div class="text-sm text-gray-500">Accuracy</div>
-        <div class="text-xl font-bold <%= stats[:accuracy].to_s.to_f >= 70 ? 'text-green-600' : stats[:accuracy].to_s.to_f >= 50 ? 'text-yellow-600' : 'text-red-600' %>">
-          <%= stats[:accuracy] %>
+        <div class="text-xl font-bold <%= accuracy_class(stats.accuracy) %>">
+          <%= "#{stats.accuracy}%" %>
         </div>
       </div>
       <div class="text-center">
         <div class="text-sm text-gray-500">Coryat Score</div>
-        <div class="text-xl font-bold text-indigo-600"><%= format_currency(stats[:coryat_score]) %></div>
+        <div class="text-xl font-bold text-indigo-600"><%= format_currency(stats.coryat) %></div>
       </div>
       <div class="text-center">
         <div class="text-sm text-gray-500">Max Possible</div>
-        <div class="text-xl font-bold text-gray-700"><%= format_currency(stats[:max_possible_score]) %></div>
+        <div class="text-xl font-bold text-gray-700"><%= format_currency(stats.max_possible) %></div>
       </div>
     </div>
 
     <%# Clue Review %>
     <h2 class="text-xl font-bold text-gray-900 mb-4">Clue Review</h2>
     <div class="space-y-4">
-      <% @drill.drill_clues.each do |dc| %>
+      <% @drill.drill_clues.includes(:clue).each do |dc| %>
         <div class="bg-white rounded-lg shadow overflow-hidden">
           <div class="bg-blue-900 px-4 py-3 flex justify-between items-center">
             <span class="text-yellow-400 font-semibold">

@@ -10,6 +10,18 @@ class DrillClue < ApplicationRecord
 
   enum :result, { incorrect: -1, pass: 0, correct: 1 }
 
+  # result doubles as the coryat sign; COUNT FILTER (not SUM(bool)) keeps this portable to Postgres
+  scope :stats, lambda {
+    joins(:clue).select(
+      "COUNT(*) AS seen",
+      "COUNT(*) FILTER (WHERE drill_clues.result = 1) AS correct",
+      "COUNT(*) FILTER (WHERE drill_clues.result = -1) AS incorrect",
+      "COUNT(*) FILTER (WHERE drill_clues.result = 0) AS passed",
+      "COALESCE(SUM(drill_clues.result * clues.normalized_clue_value), 0) AS coryat",
+      "COALESCE(SUM(clues.normalized_clue_value), 0) AS max_possible"
+    )
+  }
+
   before_save :judge_response
 
   after_commit :update_drill_counts

@@ -5,21 +5,13 @@ class Drill < ApplicationRecord
 
   after_save :update_counts!
 
-  # TODO: add columns to the drills table to persist these values
-  # could also create a separate DrillStats model if needed
-
-  # TODO: DrillStats model
-  def stats
-    {
-      correct: correct_count,
-      incorrect: incorrect_count,
-      pass: pass_count,
-      seen: clues_seen_count,
-      accuracy: accuracy,
-      coryat_score: coryat_score,
-      max_possible_score: max_possible_score
-    }
+  Stats = Data.define(:seen, :correct, :incorrect, :passed, :coryat, :max_possible) do
+    def self.from(row) = new(**members.index_with { row[it] || 0 })
+    def accuracy = seen.zero? ? 0.0 : (correct * 100.0 / seen).round(2)
   end
+
+  # skips the query when stats columns were preloaded onto the drill
+  def stats = Stats.from(has_attribute?(:seen) ? self : drill_clues.stats.take)
 
   def accuracy
     return "0%" if clues_seen_count.zero?
@@ -65,19 +57,6 @@ class Drill < ApplicationRecord
       pass_count: counts["pass"] || 0,
       updated_at: Time.current
     )
-  end
-
-  def coryat_score
-    drill_clues.includes([ :clue ]).reduce(0) do |score, dc|
-      next score if (res = dc.result)  == "pass"
-
-      score.send(
-        res == "correct" ? :+ : :-, dc.normalized_clue_value)
-    end
-  end
-
-  def max_possible_score
-    drill_clues.includes(:clue).sum(:clue_value)
   end
 
   private

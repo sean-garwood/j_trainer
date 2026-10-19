@@ -39,8 +39,38 @@ class DrillTest < ActiveSupport::TestCase
     assert clue, "Clue gone"
   end
 
-  # TODO: might wanna do DrillStats first.
-  # test "coryat score" do
-  #   @drill = drills(:one)
-  # end
+  test "stats coryat is the signed sum of normalized values" do
+    drill = Drill.create!(user: users(:one))
+    add_results(drill, one: :correct, two: :incorrect, three: :correct, new: :pass)
+
+    stats = drill.stats
+    assert_equal 200 - 400 + 400, stats.coryat
+    assert_equal [ 4, 2, 1, 1 ], [ stats.seen, stats.correct, stats.incorrect, stats.passed ]
+    assert_equal 50.0, stats.accuracy
+  end
+
+  test "stats max_possible uses normalized clue values" do
+    drill = Drill.create!(user: users(:one))
+    add_results(drill, old: :correct)
+
+    assert_equal 200, drill.stats.max_possible
+    assert_equal 200, drill.stats.coryat
+  end
+
+  test "stats for a drill without clues are all zero" do
+    stats = Drill.create!(user: users(:one)).stats
+
+    assert_equal Drill::Stats.new(seen: 0, correct: 0, incorrect: 0, passed: 0, coryat: 0, max_possible: 0), stats
+    assert_equal 0.0, stats.accuracy
+  end
+
+  private
+
+    # insert_all skips ResponseJudge so results can be set directly
+    def add_results(drill, results)
+      rows = results.map do |clue, result|
+        { drill_id: drill.id, clue_id: clues(clue).id, result: DrillClue.results[result] }
+      end
+      DrillClue.insert_all!(rows)
+    end
 end
