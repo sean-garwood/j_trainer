@@ -8,6 +8,7 @@ class DrillsController < ApplicationController
   def index
     # Paginate drills, ordered by most recent first, 10 per page
     @pagy, @drills = pagy(@drills.order(created_at: :desc), limit: 10)
+    @stats = Drill::Stats.by_drill(DrillClue.where(drill: @drills))
   end
 
   def show
