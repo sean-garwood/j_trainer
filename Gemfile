@@ -72,13 +72,13 @@ end
 
 gem "tailwindcss-ruby", "~> 4.3"
 
-gem "tailwindcss-rails", "~> 4.6"
+gem "tailwindcss-rails", "~> 4.7"
 
 # Authenticate resources available to users
 gem "cancancan"
 
 # Pagination
-gem "pagy", "~> 43.7"
+gem "pagy", "~> 43.8"
 
 gem "csv", "~> 3.3"
 
